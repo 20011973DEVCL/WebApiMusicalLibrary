@@ -20,6 +20,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddScoped<IGenreRepository,GenreRepository>();
+builder.Services.AddScoped<ICountryRepository,CountryRepository>();
+builder.Services.AddScoped<IBandSingerRepository,BandSingerRepository>();
 
 var app = builder.Build();
 

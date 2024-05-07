@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionTablas : Migration
+    public partial class ModificacionModelo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,9 +41,9 @@ namespace WebApiMusicalLibrary.Migrations
                 {
                     IdBandSinger = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Members = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Members = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdCountry = table.Column<string>(type: "nvarchar(3)", nullable: false),
-                    StarDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StarDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -63,11 +64,11 @@ namespace WebApiMusicalLibrary.Migrations
                 {
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
                     AlbunName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AlbunYear = table.Column<int>(type: "int", nullable: false),
+                    AlbunYear = table.Column<int>(type: "int", nullable: true),
                     IdBandSinger = table.Column<int>(type: "int", nullable: false),
                     IdGenre = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -93,7 +94,7 @@ namespace WebApiMusicalLibrary.Migrations
                     IdSong = table.Column<int>(type: "int", nullable: false),
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
                     Track = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {

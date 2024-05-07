@@ -15,7 +15,7 @@ namespace WebApiMusicalLibrary.Models
         public Albun Albun { get; set; }
 
         [Required]
-        public int Track { get; set; }
+        public int? Track { get; set; }
 
         [Required]
         [MaxLength(20)]

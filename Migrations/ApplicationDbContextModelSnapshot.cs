@@ -31,21 +31,20 @@ namespace WebApiMusicalLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AlbunYear")
+                    b.Property<int?>("AlbunYear")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("Cover")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("IdBandSinger")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdGenre")
+                    b.Property<int?>("IdGenre")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -74,14 +73,13 @@ namespace WebApiMusicalLibrary.Migrations
                         .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Members")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StarDate")
+                    b.Property<DateTime?>("StarDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("IdBandSinger");
@@ -132,10 +130,11 @@ namespace WebApiMusicalLibrary.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("Track")
+                    b.Property<int?>("Track")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("IdSong");
