@@ -27,8 +27,16 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<int>("IdAlbun")
                         .HasColumnType("int");
 
-                    b.Property<int>("GenreIdGenre")
+                    b.Property<string>("AlbunName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AlbunYear")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Cover")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("IdBandSinger")
                         .HasColumnType("int");
@@ -36,18 +44,16 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<int>("IdGenre")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Notes")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("IdAlbun");
 
-                    b.HasIndex("GenreIdGenre");
-
                     b.HasIndex("IdBandSinger");
+
+                    b.HasIndex("IdGenre");
 
                     b.ToTable("Albun");
                 });
@@ -65,7 +71,7 @@ namespace WebApiMusicalLibrary.Migrations
 
                     b.Property<string>("IdCountry")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Members")
                         .IsRequired()
@@ -88,12 +94,13 @@ namespace WebApiMusicalLibrary.Migrations
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Country", b =>
                 {
                     b.Property<string>("IdCountry")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("CountryName")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("IdCountry");
 
@@ -125,8 +132,8 @@ namespace WebApiMusicalLibrary.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("Track")
                         .HasColumnType("int");
@@ -140,15 +147,15 @@ namespace WebApiMusicalLibrary.Migrations
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Albun", b =>
                 {
-                    b.HasOne("WebApiMusicalLibrary.Models.Genre", "Genre")
-                        .WithMany()
-                        .HasForeignKey("GenreIdGenre")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebApiMusicalLibrary.Models.BandSinger", "BandSinger")
                         .WithMany()
                         .HasForeignKey("IdBandSinger")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiMusicalLibrary.Models.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("IdGenre")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

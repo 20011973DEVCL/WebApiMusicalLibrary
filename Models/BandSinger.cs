@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApiMusicalLibrary.Models
 {
@@ -11,7 +7,7 @@ namespace WebApiMusicalLibrary.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdBandSinger { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string Members { get; set; }
         
         [Required]

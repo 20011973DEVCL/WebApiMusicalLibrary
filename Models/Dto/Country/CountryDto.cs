@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class Country
+    public class CountryDto
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         [MaxLength(3)]
         public string IdCountry { get; set; }
         [Required]

@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class SeCreanTablasPrincipales : Migration
+    public partial class CreacionTablas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,8 +14,8 @@ namespace WebApiMusicalLibrary.Migrations
                 name: "Country",
                 columns: table => new
                 {
-                    IdCountry = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CountryName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                    IdCountry = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    CountryName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,7 +41,7 @@ namespace WebApiMusicalLibrary.Migrations
                     IdBandSinger = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Members = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdCountry = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IdCountry = table.Column<string>(type: "nvarchar(3)", nullable: false),
                     StarDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -63,11 +62,12 @@ namespace WebApiMusicalLibrary.Migrations
                 columns: table => new
                 {
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false),
+                    AlbunName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AlbunYear = table.Column<int>(type: "int", nullable: false),
                     IdBandSinger = table.Column<int>(type: "int", nullable: false),
                     IdGenre = table.Column<int>(type: "int", nullable: false),
-                    GenreIdGenre = table.Column<int>(type: "int", nullable: false)
+                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,8 +79,8 @@ namespace WebApiMusicalLibrary.Migrations
                         principalColumn: "IdBandSinger",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Albun_Genre_GenreIdGenre",
-                        column: x => x.GenreIdGenre,
+                        name: "FK_Albun_Genre_IdGenre",
+                        column: x => x.IdGenre,
                         principalTable: "Genre",
                         principalColumn: "IdGenre",
                         onDelete: ReferentialAction.Cascade);
@@ -93,7 +93,7 @@ namespace WebApiMusicalLibrary.Migrations
                     IdSong = table.Column<int>(type: "int", nullable: false),
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
                     Track = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,14 +107,14 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Albun_GenreIdGenre",
-                table: "Albun",
-                column: "GenreIdGenre");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Albun_IdBandSinger",
                 table: "Albun",
                 column: "IdBandSinger");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Albun_IdGenre",
+                table: "Albun",
+                column: "IdGenre");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BandSinger_IdCountry",

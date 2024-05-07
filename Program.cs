@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using WebApiMusicalLibrary;
 using WebApiMusicalLibrary.Data;
+using WebApiMusicalLibrary.Repository;
+using WebApiMusicalLibrary.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
     option.UseSqlServer( builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+builder.Services.AddScoped<IGenreRepository,GenreRepository>();
 
 var app = builder.Build();
 

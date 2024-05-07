@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class Albun
+    public class AlbunDto
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdAlbun { get; set; } 
         
         public string AlbunName { get; set; } = string.Empty;
@@ -15,14 +13,8 @@ namespace WebApiMusicalLibrary.Models
         [Required]
         public int IdBandSinger { get; set; }
 
-        [ForeignKey("IdBandSinger")]
-        public BandSinger BandSinger { get; set; }
-
         [Required]
         public int IdGenre { get; set; }
-
-        [ForeignKey("IdGenre")]
-        public Genre Genre { get; set; }
 
         public byte[] Cover { get; set; }
 

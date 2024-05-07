@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class Genre
+    public class GenreUpdateDto
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Required]
         public int IdGenre { get; set; }
         [Required]
         [MaxLength(30)]
