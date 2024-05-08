@@ -22,6 +22,7 @@ builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IGenreRepository,GenreRepository>();
 builder.Services.AddScoped<ICountryRepository,CountryRepository>();
 builder.Services.AddScoped<IBandSingerRepository,BandSingerRepository>();
+builder.Services.AddScoped<IAlbunRepository,AlbunRepository>();
 
 var app = builder.Build();
 
