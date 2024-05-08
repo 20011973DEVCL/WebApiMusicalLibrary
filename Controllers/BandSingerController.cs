@@ -12,13 +12,15 @@ namespace WebApiMusicalLibrary.Controllers
     public class BandSingerController : ControllerBase
     {
         private readonly IBandSingerRepository _bandSingerRepo;
+        private readonly ICountryRepository _countryRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public BandSingerController(IBandSingerRepository bandSingerRepo, ILogger<GenreController> logger, IMapper mapper)
+        public BandSingerController(IBandSingerRepository bandSingerRepo, ICountryRepository countryRepo, ILogger<GenreController> logger, IMapper mapper)
         {
             _bandSingerRepo = bandSingerRepo;
+            _countryRepo = countryRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
@@ -108,8 +110,24 @@ namespace WebApiMusicalLibrary.Controllers
                 }
 
                 BandSinger modelo = _mapper.Map<BandSinger>(createDto);
-                var idx = await _bandSingerRepo.GetAll();
-                modelo.IdBandSinger =  idx.OrderByDescending(v=>v.IdBandSinger).FirstOrDefault().IdBandSinger +1;
+                if (modelo.IdCountry!=string.Empty)
+                {
+                    var contrySinger= await _countryRepo.GetOne(c=>c.IdCountry.ToLower().Trim() == modelo.IdCountry.ToLower().Trim());
+                    if (contrySinger==null) {
+                        ModelState.AddModelError("ValidationOfCountry","The entered country does not exist" );
+                        return BadRequest(ModelState);      
+                    }
+                }
+
+                var keyParent = await _bandSingerRepo.GetAll();
+                var idx =0;
+                if (keyParent.Count==0) {
+                    idx = 1;
+                } else {
+                    idx = keyParent.OrderByDescending(v=>v.IdBandSinger).FirstOrDefault().IdBandSinger +1;
+                }
+
+                modelo.IdBandSinger = idx;
                 modelo.DateCreate = DateTime.Now;
                 modelo.DateUpdate = DateTime.Now;
             
@@ -170,15 +188,17 @@ namespace WebApiMusicalLibrary.Controllers
         {
             try
             {
-                if (updateDto == null || id!= 0)
+                if (updateDto == null || id== 0)
                 {
                     _response.Successful=false;
+                    _response.ErrorMessages =new List<string>() {"The Id cannot be 0"};
                     _response.statusCode =HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
 
                 BandSinger modelo = _mapper.Map<BandSinger>(updateDto);
 
+                modelo.DateUpdate = DateTime.Now;
                 await _bandSingerRepo.Update(modelo);
                 _response.Result = modelo;
                 _response.statusCode = HttpStatusCode.NoContent;
