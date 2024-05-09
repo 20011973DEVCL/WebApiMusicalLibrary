@@ -13,14 +13,17 @@ namespace WebApiMusicalLibrary.Controllers
     {
         private readonly IBandSingerRepository _bandSingerRepo;
         private readonly ICountryRepository _countryRepo;
+        private readonly IAlbunRepository _albunRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public BandSingerController(IBandSingerRepository bandSingerRepo, ICountryRepository countryRepo, ILogger<GenreController> logger, IMapper mapper)
+        public BandSingerController(IBandSingerRepository bandSingerRepo, ICountryRepository countryRepo, IAlbunRepository albunRepo,
+            ILogger<GenreController> logger, IMapper mapper)
         {
             _bandSingerRepo = bandSingerRepo;
             _countryRepo = countryRepo;
+            _albunRepo = albunRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
@@ -150,7 +153,7 @@ namespace WebApiMusicalLibrary.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> DeleteCountry(int id)
+        public async Task<IActionResult> DeleteBandSinger(int id)
         {
             try
             {
@@ -161,12 +164,21 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
+                //Que exista el Grupo o cantante 
                 var bandSinger= await _bandSingerRepo.GetOne(v=>v.IdBandSinger == id);
                 if (bandSinger==null)
                 {
                     _response.Successful=false;
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
+                }
+
+                //Que Grupo o cantante  no tenga asociado Albunes
+                var existSongs = await _albunRepo.GetOne(s=> s.IdBandSinger == bandSinger.IdBandSinger);
+                if (existSongs != null)
+                {
+                    ModelState.AddModelError("ValidationOfAlbun", "You cannnot Delete this Band or Singer because has Albuns asociated");
+                    return BadRequest(ModelState);
                 }
                 await _bandSingerRepo.Delete(bandSinger);
                 _response.statusCode = HttpStatusCode.NoContent;
@@ -184,7 +196,7 @@ namespace WebApiMusicalLibrary.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> UpdateGenre([FromBody] BandSingerUpdateDto updateDto, int id)
+        public async Task<IActionResult> UpdateBandSinger([FromBody] BandSingerUpdateDto updateDto, int id)
         {
             try
             {

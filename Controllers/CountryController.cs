@@ -12,13 +12,15 @@ namespace WebApiMusicalLibrary.Controllers
     public class CountryController : ControllerBase
     {
         private readonly ICountryRepository _countryRepo;
+        private readonly IBandSingerRepository _bandSingerRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public CountryController(ICountryRepository countryRepo, ILogger<GenreController> logger, IMapper mapper)
+        public CountryController(ICountryRepository countryRepo,IBandSingerRepository bandSingerRepo, ILogger<GenreController> logger, IMapper mapper)
         {
             _countryRepo = countryRepo;
+            _bandSingerRepo = bandSingerRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
@@ -33,7 +35,7 @@ namespace WebApiMusicalLibrary.Controllers
                 _logger.LogInformation("Get all Countries");
                 IEnumerable<Country> countryList = await _countryRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<CountryDto>>(countryList);
+                _response.Result = _mapper.Map<IEnumerable<CountryDto>>(countryList.OrderBy(c =>c.CountryName));
                 _response.statusCode= HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -139,12 +141,21 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
+                //Existe Pais
                 var country= await _countryRepo.GetOne(v=>v.IdCountry == id);
                 if (country==null)
                 {
                     _response.Successful=false;
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
+                }
+
+                //Existe Pais en Albun
+                var existCountry = await _bandSingerRepo.GetOne(c=>c.IdCountry == country.IdCountry);
+                if (existCountry!=null)
+                {
+                    ModelState.AddModelError("ValidationOfCountryInAlbun", "You cannot delete this contry because is asociated to Band or Singer");
+                    return BadRequest(ModelState);
                 }
                 await _countryRepo.Delete(country);
                 _response.statusCode = HttpStatusCode.NoContent;

@@ -106,19 +106,29 @@ namespace WebApiMusicalLibrary.Controllers
 
                 Songs modelo = _mapper.Map<Songs>(createDto);
 
+                //Albun Existe para la cancion
                 var albunExist= await _albunRepo.GetOne(a=>a.IdAlbun == modelo.IdAlbun);
                 if (albunExist==null) {
                     ModelState.AddModelError("ValidationOfAlbun","The entered Albun does not exist" );
                     return BadRequest(ModelState);      
                 }
 
+                //Existe el mismo nombre de la cancion
                 var songName = await _songsRepo.GetOne(v=> v.Name.ToLower().Trim()== createDto.Name.ToLower().Trim());
                 if (songName!=null)
                 {
                     ModelState.AddModelError("ValidationOfNames", "The entered Name already exists");
                     return BadRequest(ModelState);
                 }
-                
+
+                //IdAlbun y Track no deben repetirse
+                var existAlbunTrack = await _songsRepo.GetOne(s=>s.IdAlbun == modelo.IdAlbun && s.Track == modelo.Track);
+               if (existAlbunTrack!=null)
+                {
+                    ModelState.AddModelError("ValidationOfAlbunTrack", "The entered Albun and Number of Track already exists");
+                    return BadRequest(ModelState);
+                }
+
                 var keyParent = await _songsRepo.GetAll();
                 var idx =0;
                 if (keyParent.Count==0) {

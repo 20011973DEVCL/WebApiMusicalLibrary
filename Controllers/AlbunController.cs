@@ -17,15 +17,18 @@ namespace WebApiMusicalLibrary.Controllers
         private readonly IAlbunRepository _albunRepo;
         private readonly IBandSingerRepository _bandSingerRepo;
         private readonly IGenreRepository _genreRepo;
+        private readonly ISongsRepository _songsRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public AlbunController(IAlbunRepository albunRepo, IBandSingerRepository bandSingerRepo, IGenreRepository genreRepo, ILogger<GenreController> logger, IMapper mapper)
+        public AlbunController(IAlbunRepository albunRepo, IBandSingerRepository bandSingerRepo, ISongsRepository songsRepo,
+                IGenreRepository genreRepo, ILogger<GenreController> logger, IMapper mapper)
         {
             _albunRepo = albunRepo;
             _bandSingerRepo = bandSingerRepo;
             _genreRepo = genreRepo;
+            _songsRepo = songsRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
@@ -102,13 +105,6 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(ModelState);
                 }
 
-                // var albunName = await _albunRepo.GetOne(v=> v.AlbunName.ToLower().Trim()== createDto.AlbunName.ToLower().Trim());
-                // if (albunName!=null)
-                // {
-                //     ModelState.AddModelError("ValidationOfNames", "The entered Name already exists");
-                //     return BadRequest(ModelState);
-                // }
-
                 if (createDto==null)
                 {
                     return BadRequest(createDto);
@@ -116,12 +112,14 @@ namespace WebApiMusicalLibrary.Controllers
 
                 Albun modelo = _mapper.Map<Albun>(createDto);
 
+                //Exista Grupo o Cantante Asociado
                 var bandSinger= await _bandSingerRepo.GetOne(b=>b.IdBandSinger == modelo.IdBandSinger);
                 if (bandSinger==null) {
                     ModelState.AddModelError("ValidationOfBandSinger","The entered Band or Singer does not exist" );
                     return BadRequest(ModelState);      
                 }
 
+                //Exista Genero Asociado
                 var genre = await _genreRepo.GetOne(g=>g.IdGenre == modelo.IdGenre);
                 if (genre == null) {
                     ModelState.AddModelError("ValidationOfGenre","The entered Genre does not exist" );
@@ -174,6 +172,15 @@ namespace WebApiMusicalLibrary.Controllers
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
+
+                //Que Albun no tenga asociado Canciones
+                var existSongs = await _songsRepo.GetOne(s=> s.IdAlbun == bandSinger.IdAlbun);
+                if (existSongs != null)
+                {
+                    ModelState.AddModelError("ValidationOfSongs", "You cannnot Delete this Albun because has Songs asociated");
+                    return BadRequest(ModelState);
+                }
+
                 await _albunRepo.Delete(bandSinger);
                 _response.statusCode = HttpStatusCode.NoContent;
 

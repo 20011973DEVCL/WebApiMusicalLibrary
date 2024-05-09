@@ -12,13 +12,15 @@ namespace WebApiMusicalLibrary.Controllers
     public class GenreController : ControllerBase
     {
         private readonly IGenreRepository _genreRepo;
+        private readonly IAlbunRepository _albunRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public GenreController(IGenreRepository genreRepo, ILogger<GenreController> logger, IMapper mapper)
+        public GenreController(IGenreRepository genreRepo, IAlbunRepository albunRepo, ILogger<GenreController> logger, IMapper mapper)
         {
             _genreRepo = genreRepo;
+            _albunRepo = albunRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
@@ -142,6 +144,7 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
+                //Existe genero
                 var genre= await _genreRepo.GetOne(v=>v.IdGenre == id);
                 if (genre==null)
                 {
@@ -149,6 +152,15 @@ namespace WebApiMusicalLibrary.Controllers
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
+
+                //Genero tiene asociados Albunes
+                var existAlbun = await _albunRepo.GetOne(b=>b.IdGenre == genre.IdGenre);
+                if (existAlbun != null)
+                {
+                    ModelState.AddModelError("ValidationOfAlbun", "You cannnot Delete this Genre because has Albuns asociated");
+                    return BadRequest(ModelState);
+                }
+
                 await _genreRepo.Delete(genre);
                 _response.statusCode = HttpStatusCode.NoContent;
 
