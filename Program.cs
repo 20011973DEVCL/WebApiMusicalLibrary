@@ -23,6 +23,7 @@ builder.Services.AddScoped<IGenreRepository,GenreRepository>();
 builder.Services.AddScoped<ICountryRepository,CountryRepository>();
 builder.Services.AddScoped<IBandSingerRepository,BandSingerRepository>();
 builder.Services.AddScoped<IAlbunRepository,AlbunRepository>();
+builder.Services.AddScoped<ISongsRepository,SongsRepository>();
 
 var app = builder.Build();
 

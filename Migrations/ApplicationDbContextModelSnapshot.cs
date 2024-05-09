@@ -125,13 +125,16 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<int>("IdSong")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Disc")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdAlbun")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("Track")
                         .IsRequired()

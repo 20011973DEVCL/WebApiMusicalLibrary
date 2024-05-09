@@ -10,7 +10,7 @@ namespace WebApiMusicalLibrary.Models
         [Required]
         public string AlbunName { get; set; } = string.Empty;
 
-        public int AlbunYear { get; set; }
+        public int? AlbunYear { get; set; }
 
         [Required]
         public int IdBandSinger { get; set; }
@@ -18,8 +18,7 @@ namespace WebApiMusicalLibrary.Models
         [Required]
         public int IdGenre { get; set; }
 
-        // public byte[] Cover { get; set; }
-
-        // public string Notes { get; set; }
+        public byte[]? Cover { get; set; }
+        public string? Notes { get; set; }
     }
 }
