@@ -18,17 +18,23 @@ namespace WebApiMusicalLibrary.Controllers
         private readonly IBandSingerRepository _bandSingerRepo;
         private readonly IGenreRepository _genreRepo;
         private readonly ISongsRepository _songsRepo;
+        private readonly ICountryRepository _countryRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public AlbunController(IAlbunRepository albunRepo, IBandSingerRepository bandSingerRepo, ISongsRepository songsRepo,
-                IGenreRepository genreRepo, ILogger<GenreController> logger, IMapper mapper)
+        public AlbunController( IAlbunRepository albunRepo, 
+                                IBandSingerRepository bandSingerRepo, 
+                                ISongsRepository songsRepo,
+                                IGenreRepository genreRepo, 
+                                ICountryRepository countryRepo,
+                                ILogger<GenreController> logger, IMapper mapper)
         {
             _albunRepo = albunRepo;
             _bandSingerRepo = bandSingerRepo;
             _genreRepo = genreRepo;
             _songsRepo = songsRepo;
+            _countryRepo = countryRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
@@ -91,7 +97,81 @@ namespace WebApiMusicalLibrary.Controllers
             }
             return _response;
         }
-    
+
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> Search(string? nombreAlbun, string? nombreBandaCantante, int? IdGenero, string? IdPais) 
+        {
+            try
+            {
+                _logger.LogInformation("Get all Band or Singers by ID");
+                var pais = await _countryRepo.GetAll();
+                var banda = await _bandSingerRepo.GetAll();
+                var albun = await _albunRepo.GetAll();
+                var genero = await _genreRepo.GetAll();
+
+                var query = 
+                from varAlbun in albun 
+                join varBanda in banda on 
+                varAlbun.IdBandSinger equals varBanda.IdBandSinger join varPais in pais on varBanda.IdCountry equals varPais.IdCountry
+                join varGenero in genero on varAlbun.IdGenre equals varGenero.IdGenre
+                select new {
+                            varAlbun.IdAlbun,
+                            varAlbun.AlbunName,
+                            varAlbun.AlbunYear,
+                            varBanda.IdBandSinger,
+                            varBanda.Name,
+                            varBanda.StarDate,
+                            varAlbun.Notes,
+                            varPais.IdCountry,
+                            varPais.CountryName,
+                            varGenero.IdGenre,
+                            varGenero.GenreName
+                            };
+
+                if  (nombreAlbun!=null && nombreBandaCantante!=null && IdGenero!=null && IdPais!=null) {
+                    query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
+                                        q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
+                                        q.IdGenre == IdGenero &&
+                                        q.IdCountry.ToUpper()==IdPais.ToUpper());
+                } else if (nombreAlbun!=null && nombreBandaCantante!=null && IdGenero!=null) {
+                    query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
+                                        q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
+                                        q.IdGenre == IdGenero);
+                } else if (nombreAlbun!=null && nombreBandaCantante!=null) {
+                    query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
+                                        q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
+                } else if (nombreAlbun!=null) {
+                    query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim());
+                } else if (nombreBandaCantante!=null) {
+                    query = query.Where(q=>q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
+                }  else if (IdGenero!=null) {
+                    query = query.Where(q=>q.IdGenre==IdGenero);
+                } else if (IdPais!=null) {
+                    query = query.Where(q=>q.IdCountry.ToUpper().Trim()==IdPais.ToUpper().Trim());
+                } 
+
+                if (query.Count()>0) {
+                    _response.Result = query.ToList();
+                    _response.statusCode= HttpStatusCode.OK;
+                    return Ok(_response);
+                } else {
+                    _response.Successful = false;
+                    _response.statusCode= HttpStatusCode.NotFound;
+                    return NotFound(_response);    
+                }
+
+  
+            }
+            catch (Exception ex)
+            {
+                _response.Successful=false;
+                _response.ErrorMessages=new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

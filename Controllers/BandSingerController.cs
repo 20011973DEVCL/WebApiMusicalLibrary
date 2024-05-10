@@ -87,6 +87,60 @@ namespace WebApiMusicalLibrary.Controllers
             return _response;
         }
     
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> Search(string? idCountry, string? nameBandSinger)
+        {
+            try
+            {
+                _logger.LogInformation("Get all Band or Singers by ID");
+
+                var bandas = await _bandSingerRepo.GetAll();
+                var countries = await _countryRepo.GetAll();
+
+                var query =
+                from varBanda in bandas
+                join varCountry in countries on varBanda.IdCountry equals varCountry.IdCountry
+                select new { 
+                            varBanda.IdBandSinger, 
+                            varBanda.Name, 
+                            varBanda.Members, 
+                            varCountry.IdCountry, 
+                            varCountry.CountryName,
+                            varBanda.StarDate 
+                            };
+
+                if (idCountry==null && nameBandSinger!=null) 
+                {
+                    query = query.Where(q=>q.Name.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
+                } else if (idCountry!=null && nameBandSinger!=null) {
+                    query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper() && q.Name.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
+                } else if (idCountry!=null && nameBandSinger==null) {
+                    query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper());
+                }
+
+                if (query.Count()> 0) {
+                    _response.Result = query.ToList();
+                    _response.statusCode= HttpStatusCode.OK;
+                    return Ok(_response);
+                } else {
+                    _response.Successful = false;
+                    _response.statusCode= HttpStatusCode.NotFound;
+                    return NotFound(_response);    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _response.Successful=false;
+                _response.ErrorMessages=new List<string>() { ex.ToString() };
+            }
+            return _response;
+
+        }
+
+        
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
