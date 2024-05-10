@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionTablas : Migration
+    public partial class CreacionBaseDeDatos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,7 +40,7 @@ namespace WebApiMusicalLibrary.Migrations
                 columns: table => new
                 {
                     IdBandSinger = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BandSingerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Members = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdCountry = table.Column<string>(type: "nvarchar(3)", nullable: false),
                     StarDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -94,7 +94,7 @@ namespace WebApiMusicalLibrary.Migrations
                     IdSong = table.Column<int>(type: "int", nullable: false),
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
                     Track = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SongName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Disc = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

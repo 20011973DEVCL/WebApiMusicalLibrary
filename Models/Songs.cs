@@ -19,7 +19,7 @@ namespace WebApiMusicalLibrary.Models
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public string SongName { get; set; }
 
         public int? Disc { get; set; }
     }

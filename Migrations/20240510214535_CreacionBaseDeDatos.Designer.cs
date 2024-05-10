@@ -12,8 +12,8 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240509144202_CreacionTablas")]
-    partial class CreacionTablas
+    [Migration("20240510214535_CreacionBaseDeDatos")]
+    partial class CreacionBaseDeDatos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,10 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<int>("IdBandSinger")
                         .HasColumnType("int");
 
+                    b.Property<string>("BandSingerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime2");
 
@@ -76,10 +80,6 @@ namespace WebApiMusicalLibrary.Migrations
                         .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Members")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StarDate")
@@ -134,7 +134,7 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<int>("IdAlbun")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SongName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");

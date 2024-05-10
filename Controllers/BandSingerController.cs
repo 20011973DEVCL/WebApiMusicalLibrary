@@ -104,7 +104,7 @@ namespace WebApiMusicalLibrary.Controllers
                 join varCountry in countries on varBanda.IdCountry equals varCountry.IdCountry
                 select new { 
                             varBanda.IdBandSinger, 
-                            varBanda.Name, 
+                            varBanda.BandSingerName, 
                             varBanda.Members, 
                             varCountry.IdCountry, 
                             varCountry.CountryName,
@@ -113,9 +113,9 @@ namespace WebApiMusicalLibrary.Controllers
 
                 if (idCountry==null && nameBandSinger!=null) 
                 {
-                    query = query.Where(q=>q.Name.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
+                    query = query.Where(q=>q.BandSingerName.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
                 } else if (idCountry!=null && nameBandSinger!=null) {
-                    query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper() && q.Name.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
+                    query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper() && q.BandSingerName.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
                 } else if (idCountry!=null && nameBandSinger==null) {
                     query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper());
                 }
@@ -154,7 +154,7 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var bandSinger = await _bandSingerRepo.GetOne(v=> v.Name.ToLower().Trim()== createDto.Name.ToLower().Trim());
+                var bandSinger = await _bandSingerRepo.GetOne(v=> v.BandSingerName.ToLower().Trim()== createDto.BandSingerName.ToLower().Trim());
                 if (bandSinger!=null)
                 {
                     ModelState.AddModelError("ValidationOfNames", "The entered Band or Singer already exists");

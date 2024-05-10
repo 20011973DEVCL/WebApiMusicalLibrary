@@ -114,14 +114,15 @@ namespace WebApiMusicalLibrary.Controllers
                 var query = 
                 from varAlbun in albun 
                 join varBanda in banda on 
-                varAlbun.IdBandSinger equals varBanda.IdBandSinger join varPais in pais on varBanda.IdCountry equals varPais.IdCountry
+                varAlbun.IdBandSinger equals varBanda.IdBandSinger join varPais in pais 
+                    on varBanda.IdCountry equals varPais.IdCountry
                 join varGenero in genero on varAlbun.IdGenre equals varGenero.IdGenre
                 select new {
                             varAlbun.IdAlbun,
                             varAlbun.AlbunName,
                             varAlbun.AlbunYear,
                             varBanda.IdBandSinger,
-                            varBanda.Name,
+                            varBanda.BandSingerName,
                             varBanda.StarDate,
                             varAlbun.Notes,
                             varPais.IdCountry,
@@ -132,20 +133,20 @@ namespace WebApiMusicalLibrary.Controllers
 
                 if  (nombreAlbun!=null && nombreBandaCantante!=null && IdGenero!=null && IdPais!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
-                                        q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
+                                        q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
                                         q.IdGenre == IdGenero &&
                                         q.IdCountry.ToUpper()==IdPais.ToUpper());
                 } else if (nombreAlbun!=null && nombreBandaCantante!=null && IdGenero!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
-                                        q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
+                                        q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
                                         q.IdGenre == IdGenero);
                 } else if (nombreAlbun!=null && nombreBandaCantante!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
-                                        q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
+                                        q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
                 } else if (nombreAlbun!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim());
                 } else if (nombreBandaCantante!=null) {
-                    query = query.Where(q=>q.Name.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
+                    query = query.Where(q=>q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
                 }  else if (IdGenero!=null) {
                     query = query.Where(q=>q.IdGenre==IdGenero);
                 } else if (IdPais!=null) {

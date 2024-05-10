@@ -16,17 +16,23 @@ namespace WebApiMusicalLibrary.Controllers
     {
         private readonly ISongsRepository _songsRepo;
         private readonly IAlbunRepository _albunRepo;
+        private readonly ICountryRepository _countryRepo;
+        private readonly IBandSingerRepository _bandSingerRepo;
+        private readonly IGenreRepository _genreRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public SongsController(ISongsRepository songsRepo, IAlbunRepository albunRepo, ILogger<GenreController> logger, IMapper mapper)
+        public SongsController(ISongsRepository songsRepo, IAlbunRepository albunRepo, ILogger<GenreController> logger, IMapper mapper, ICountryRepository countryRepo, IBandSingerRepository bandSingerRepo, IGenreRepository genreRepo)
         {
             _songsRepo = songsRepo;
             _albunRepo = albunRepo;
             _logger = logger;
             _mapper = mapper;
-            _response=new();
+            _response = new();
+            _countryRepo = countryRepo;
+            _bandSingerRepo = bandSingerRepo;
+            _genreRepo = genreRepo;
         }
 
         [HttpGet]
@@ -86,6 +92,41 @@ namespace WebApiMusicalLibrary.Controllers
             return _response;
         }
 
+        // [HttpGet("search")]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // public async Task<ActionResult<APIResponse>> Search(int id) {
+        //         var pais = await _countryRepo.GetAll();
+        //         var banda = await _bandSingerRepo.GetAll();
+        //         var albun = await _albunRepo.GetAll();
+        //         var genero = await _genreRepo.GetAll(); 
+        //         var songs = await _songsRepo.GetAll();
+
+        //         var query = 
+        //         from varAlbun in albun 
+        //         join varBanda in banda on 
+        //         varAlbun.IdBandSinger equals varBanda.IdBandSinger join varPais in pais 
+        //             on varBanda.IdCountry equals varPais.IdCountry
+        //         join varGenero in genero on varAlbun.IdGenre equals varGenero.IdGenre
+        //         join varSongs in songs on varAlbun.is equals varSongs.
+        //         select new {
+        //                     varAlbun.IdAlbun,
+        //                     varAlbun.AlbunName,
+        //                     varAlbun.AlbunYear,
+        //                     varBanda.IdBandSinger,
+        //                     varBanda.Name,
+        //                     varBanda.StarDate,
+        //                     varAlbun.Notes,
+        //                     varPais.IdCountry,
+        //                     varPais.CountryName,
+        //                     varGenero.IdGenre,
+        //                     varGenero.GenreName,
+        //                     varSongs.IdSong,
+        //                     varSongs.Track,
+        //                     //varSongs.Name,
+        //                     };
+        // }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -114,7 +155,7 @@ namespace WebApiMusicalLibrary.Controllers
                 }
 
                 //Existe el mismo nombre de la cancion
-                var songName = await _songsRepo.GetOne(v=> v.Name.ToLower().Trim()== createDto.Name.ToLower().Trim());
+                var songName = await _songsRepo.GetOne(v=> v.SongName.ToLower().Trim()== createDto.SongName.ToLower().Trim());
                 if (songName!=null)
                 {
                     ModelState.AddModelError("ValidationOfNames", "The entered Name already exists");
