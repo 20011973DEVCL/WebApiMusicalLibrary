@@ -12,8 +12,8 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240510214535_CreacionBaseDeDatos")]
-    partial class CreacionBaseDeDatos
+    [Migration("20240513192841_CreacionDeTablas")]
+    partial class CreacionDeTablas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

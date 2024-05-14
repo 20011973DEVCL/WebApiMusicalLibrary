@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionBaseDeDatos : Migration
+    public partial class CreacionDeTablas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
