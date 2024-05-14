@@ -1,5 +1,6 @@
 using AutoMapper;
 using WebApiMusicalLibrary.Models;
+using WebApiMusicalLibrary.Models.Login;
 
 namespace WebApiMusicalLibrary
 {
@@ -25,6 +26,10 @@ namespace WebApiMusicalLibrary
             CreateMap<Songs,SongsDto>().ReverseMap();
             CreateMap<Songs,SongsCreateDto>().ReverseMap();
             CreateMap<Songs,SongsUpdateDto>().ReverseMap();
+
+            CreateMap<MenuOptions, MenuOptionsDto>().ReverseMap();
+            CreateMap<MenuOptions, MenuOptionsCreateDto>().ReverseMap();
+            CreateMap<MenuOptions, MenuOptionsUpdateDto>().ReverseMap();
         }
     }
 }

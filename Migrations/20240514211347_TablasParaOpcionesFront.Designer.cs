@@ -12,8 +12,8 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240513192841_CreacionDeTablas")]
-    partial class CreacionDeTablas
+    [Migration("20240514211347_TablasParaOpcionesFront")]
+    partial class TablasParaOpcionesFront
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,22 @@ namespace WebApiMusicalLibrary.Migrations
                     b.HasKey("IdGenre");
 
                     b.ToTable("Genre");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Login.MenuOptions", b =>
+                {
+                    b.Property<string>("IdOption")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("IdOption");
+
+                    b.ToTable("MenuOptions");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Songs", b =>

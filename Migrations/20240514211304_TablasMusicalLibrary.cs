@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionDeTablas : Migration
+    public partial class TablasMusicalLibrary : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

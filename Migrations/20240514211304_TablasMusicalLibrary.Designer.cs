@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiMusicalLibrary.Data;
 
@@ -11,9 +12,11 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240514211304_TablasMusicalLibrary")]
+    partial class TablasMusicalLibrary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,22 +121,6 @@ namespace WebApiMusicalLibrary.Migrations
                     b.HasKey("IdGenre");
 
                     b.ToTable("Genre");
-                });
-
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.Login.MenuOptions", b =>
-                {
-                    b.Property<string>("IdOption")
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("IdOption");
-
-                    b.ToTable("MenuOptions");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Songs", b =>
