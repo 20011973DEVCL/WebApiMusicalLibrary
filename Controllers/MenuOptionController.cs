@@ -1,40 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using WebApiMusicalLibrary.Models;
+using WebApiMusicalLibrary.Models.Login;
 using WebApiMusicalLibrary.Repository.IRepository;
-using System.Net;
 
 namespace WebApiMusicalLibrary.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CountryController : ControllerBase
+    public class MenuOptionController : ControllerBase
     {
-        private readonly ICountryRepository _countryRepo;
-        private readonly IBandSingerRepository _bandSingerRepo;
+        private readonly IMenuOptionRepository _menuOptRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public CountryController(ICountryRepository countryRepo,IBandSingerRepository bandSingerRepo, ILogger<GenreController> logger, IMapper mapper)
+        public MenuOptionController(IMenuOptionRepository menuOptRepo, ILogger<GenreController> logger, IMapper mapper)
         {
-            _countryRepo = countryRepo;
-            _bandSingerRepo = bandSingerRepo;
+            _menuOptRepo = menuOptRepo;
             _logger = logger;
             _mapper = mapper;
             _response = new();
         }
- 
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetGenres()
+        public async Task<ActionResult<APIResponse>> GetMenuOptions()
         {
             try
             {
-                _logger.LogInformation("Get all Countries");
-                IEnumerable<Country> countryList = await _countryRepo.GetAll();
+                IEnumerable<MenuOptions> menuOptList = await _menuOptRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<CountryDto>>(countryList.OrderBy(c =>c.CountryName));
+                _response.Result = _mapper.Map<IEnumerable<MenuOptionsDto>>(menuOptList.OrderBy(c =>c.Description));
                 _response.statusCode= HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -47,31 +48,31 @@ namespace WebApiMusicalLibrary.Controllers
             return _response;
         }
 
-        [HttpGet("{id}", Name = "GetCountry")]
+        [HttpGet("{id}", Name = "GetMenuOption")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<APIResponse>> GetCountry(string id)
+        public async Task<ActionResult<APIResponse>> GetMenuOption(string id)
         {
             try
             {
                 if (id.Trim()=="" || id ==null)
                 {
-                    _logger.LogError("Error searching for Country with ID "+ id);
+                    _logger.LogError("Error searching for Menu Option with ID "+ id);
                     _response.Successful = false;
                     _response.statusCode= HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
 
-                var genre = await _countryRepo.GetOne(v=>v.IdCountry==id);
-                if (genre==null)
+                var menuOpt = await _menuOptRepo.GetOne(v=>v.IdOption.ToUpper().Trim()==id);
+                if (menuOpt==null)
                 {
                     _response.Successful = false;
                     _response.statusCode= HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
                 
-                _response.Result = _mapper.Map<CountryDto>(genre);
+                _response.Result = _mapper.Map<MenuOptionsDto>(menuOpt);
                 _response.statusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -82,12 +83,12 @@ namespace WebApiMusicalLibrary.Controllers
             }
             return _response;
         }
-    
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> CreateCountry([FromBody] CountryCreateDto createDto)
+        public async Task<ActionResult<APIResponse>> CreateMenuOption([FromBody] MenuOptionsCreateDto createDto)
         {
             try
             {
@@ -96,10 +97,10 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var country = await _countryRepo.GetOne(v=> v.CountryName.ToLower().Trim()== createDto.CountryName.ToLower().Trim());
-                if (country!=null)
+                var menuOpt = await _menuOptRepo.GetOne(v=> v.Description.ToLower().Trim()== createDto.Description.ToLower().Trim());
+                if (menuOpt!=null)
                 {
-                    ModelState.AddModelError("ValidationOfNames", "The entered Country already exists");
+                    ModelState.AddModelError("ValidationOfNames", "The entered Menu/Option already exists");
                     return BadRequest(ModelState);
                 }
 
@@ -108,13 +109,14 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(createDto);
                 }
 
-                Country modelo = _mapper.Map<Country>(createDto);
+                MenuOptions modelo = _mapper.Map<MenuOptions>(createDto);
+                modelo.IdOption = modelo.IdOption.ToUpper().Trim();
 
-                await _countryRepo.Create(modelo);
+                await _menuOptRepo.Create(modelo);
                 _response.Result = modelo;
                 _response.statusCode = HttpStatusCode.Created;
 
-                return CreatedAtRoute("GetCountry", new { id = modelo.IdCountry}, _response);
+                return CreatedAtRoute("GetMenuOption", new { id = modelo.IdOption}, _response);
             }
             catch (Exception ex)
             {
@@ -124,13 +126,13 @@ namespace WebApiMusicalLibrary.Controllers
 
             return _response;
         }
-    
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> DeleteCountry(string id)
+        public async Task<IActionResult> DeleteMenuOption(string id)
         {
             try
             {
@@ -141,23 +143,16 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
-                //Existe Pais
-                var country= await _countryRepo.GetOne(v=>v.IdCountry == id);
-                if (country==null)
+                //Existe Menu/Opcion
+                var menuOpt= await _menuOptRepo.GetOne(v=>v.IdOption == id);
+                if (menuOpt==null)
                 {
                     _response.Successful=false;
                     _response.statusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
 
-                //Existe Pais en Albun
-                var existCountry = await _bandSingerRepo.GetOne(c=>c.IdCountry == country.IdCountry);
-                if (existCountry!=null)
-                {
-                    ModelState.AddModelError("ValidationOfCountryInAlbun", "You cannot delete this contry because is asociated to Band or Singer");
-                    return BadRequest(ModelState);
-                }
-                await _countryRepo.Delete(country);
+                await _menuOptRepo.Delete(menuOpt);
                 _response.statusCode = HttpStatusCode.NoContent;
 
                 return Ok(_response);
@@ -173,20 +168,21 @@ namespace WebApiMusicalLibrary.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> UpdateGenre([FromBody] CountryUpdateDto updateDto, string id)
+        public async Task<IActionResult> UpdateGenre([FromBody] MenuOptionsUpdateDto updateDto, string id)
         {
             try
             {
-                if (updateDto == null || id!= updateDto.IdCountry)
+                if (updateDto == null || id!= updateDto.IdOption)
                 {
                     _response.Successful=false;
                     _response.statusCode =HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
 
-                Country modelo = _mapper.Map<Country>(updateDto);
-
-                await _countryRepo.Update(modelo);
+                MenuOptions modelo = _mapper.Map<MenuOptions>(updateDto);
+                modelo.IdOption = modelo.IdOption.ToUpper().Trim();
+                
+                await _menuOptRepo.Update(modelo);
                 _response.Result = modelo;
                 _response.statusCode = HttpStatusCode.NoContent;
 

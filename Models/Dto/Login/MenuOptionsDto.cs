@@ -5,7 +5,6 @@ namespace WebApiMusicalLibrary.Models.Login
     public class MenuOptionsDto
     {
         [Required]
-        [MaxLength(3)]
         public string IdOption { get; set; }
 
         [Required]

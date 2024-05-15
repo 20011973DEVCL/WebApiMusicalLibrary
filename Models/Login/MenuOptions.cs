@@ -6,7 +6,7 @@ namespace WebApiMusicalLibrary.Models.Login
     public class MenuOptions
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [MaxLength(3)]
+        [MaxLength(6)]
         public string IdOption { get; set; }
 
         [Required]
