@@ -35,7 +35,7 @@ namespace WebApiMusicalLibrary.Controllers
             {
                 IEnumerable<MenuOptions> menuOptList = await _menuOptRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<MenuOptionsDto>>(menuOptList.OrderBy(c =>c.Description));
+                _response.Result = _mapper.Map<IEnumerable<MenuOptionsDto>>(menuOptList.OrderBy(c =>c.OptionOrder));
                 _response.statusCode= HttpStatusCode.OK;
 
                 return Ok(_response);

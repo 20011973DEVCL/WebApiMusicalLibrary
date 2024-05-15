@@ -10,5 +10,8 @@ namespace WebApiMusicalLibrary.Models.Login
         [Required]
         [MaxLength(50)]
         public string Description { get; set; }=string.Empty;
+
+        [Required]
+        public int OptionOrder { get; set; }
     }
 }

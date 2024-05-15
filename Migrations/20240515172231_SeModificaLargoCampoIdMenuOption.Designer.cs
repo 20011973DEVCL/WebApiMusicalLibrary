@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiMusicalLibrary.Data;
 
@@ -11,9 +12,11 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515172231_SeModificaLargoCampoIdMenuOption")]
+    partial class SeModificaLargoCampoIdMenuOption
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,16 +126,13 @@ namespace WebApiMusicalLibrary.Migrations
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Login.MenuOptions", b =>
                 {
                     b.Property<string>("IdOption")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<int>("OptionOrder")
-                        .HasColumnType("int");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("IdOption");
 
