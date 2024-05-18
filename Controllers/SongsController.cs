@@ -1,11 +1,13 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApiMusicalLibrary.Models;
 using WebApiMusicalLibrary.Repository.IRepository;
 
 namespace WebApiMusicalLibrary.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SongsController : ControllerBase

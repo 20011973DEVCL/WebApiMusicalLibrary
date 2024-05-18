@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApiMusicalLibrary.Models.Login;
 using WebApiMusicalLibrary.Repository.IRepository;
 
 namespace WebApiMusicalLibrary.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MenuOptionController : ControllerBase
