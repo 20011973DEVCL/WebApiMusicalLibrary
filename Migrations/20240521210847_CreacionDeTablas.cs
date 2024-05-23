@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class TablasMusicalLibrary : Migration
+    public partial class CreacionDeTablas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +33,34 @@ namespace WebApiMusicalLibrary.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genre", x => x.IdGenre);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MenuOptions",
+                columns: table => new
+                {
+                    IdOption = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    OptionOrder = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenuOptions", x => x.IdOption);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserModel",
+                columns: table => new
+                {
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserModel", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,7 +161,13 @@ namespace WebApiMusicalLibrary.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "MenuOptions");
+
+            migrationBuilder.DropTable(
                 name: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "UserModel");
 
             migrationBuilder.DropTable(
                 name: "Albun");

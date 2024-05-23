@@ -12,8 +12,8 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240514235737_CambioLargoCampo")]
-    partial class CambioLargoCampo
+    [Migration("20240521230610_SeAgregaLastNameEnUserModel")]
+    partial class SeAgregaLastNameEnUserModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,13 +126,16 @@ namespace WebApiMusicalLibrary.Migrations
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Login.MenuOptions", b =>
                 {
                     b.Property<string>("IdOption")
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<int>("OptionOrder")
+                        .HasColumnType("int");
 
                     b.HasKey("IdOption");
 
@@ -164,6 +167,36 @@ namespace WebApiMusicalLibrary.Migrations
                     b.HasIndex("IdAlbun");
 
                     b.ToTable("Songs");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.UserModel", b =>
+                {
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Username");
+
+                    b.ToTable("UserModel");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Albun", b =>

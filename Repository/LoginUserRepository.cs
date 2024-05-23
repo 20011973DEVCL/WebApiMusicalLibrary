@@ -8,18 +8,18 @@ using WebApiMusicalLibrary.Repository.IRepository;
 
 namespace WebApiMusicalLibrary.Repository
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class LoginUserRepository : Repository<UserModel>, ILoginUserRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public UserRepository(ApplicationDbContext db):base(db)
+        public LoginUserRepository(ApplicationDbContext db):base(db)
         {
             _db = db;
         }
 
-        public async Task<User> Update(User entity)
+        public async Task<UserModel> Update(UserModel entity)
         {
-            _db.Users.Update(entity);
+            _db.UserModel.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
         }

@@ -21,7 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
 });
 
 // Configure JWT authentication
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+var key = Convert.ToBase64String(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(key))
     };
 });
 
@@ -50,7 +50,7 @@ builder.Services.AddScoped<IBandSingerRepository,BandSingerRepository>();
 builder.Services.AddScoped<IAlbunRepository,AlbunRepository>();
 builder.Services.AddScoped<ISongsRepository,SongsRepository>();
 builder.Services.AddScoped<IMenuOptionRepository,MenuOptionRepository>();
-builder.Services.AddScoped<IUserRepository,UserRepository>();
+// builder.Services.AddScoped<ILoginUserRepository,LoginUserRepository>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

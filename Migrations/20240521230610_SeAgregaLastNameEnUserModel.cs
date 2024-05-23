@@ -5,25 +5,25 @@
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class SeCreaNvoCampoOrdenEnMenuOptions : Migration
+    public partial class SeAgregaLastNameEnUserModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "OptionOrder",
-                table: "MenuOptions",
-                type: "int",
+            migrationBuilder.AddColumn<string>(
+                name: "LastName",
+                table: "UserModel",
+                type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "OptionOrder",
-                table: "MenuOptions");
+                name: "LastName",
+                table: "UserModel");
         }
     }
 }

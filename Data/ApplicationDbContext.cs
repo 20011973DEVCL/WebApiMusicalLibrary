@@ -12,7 +12,7 @@ namespace WebApiMusicalLibrary.Data
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Songs> Songs { get; set; }
         public DbSet<MenuOptions> MenuOptions { get; set; }
-        public DbSet<User> Users {get; set;}
+        public DbSet<UserModel> UserModel {get; set;}
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
