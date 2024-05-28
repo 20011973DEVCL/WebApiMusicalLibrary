@@ -20,6 +20,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(option => {
     option.UseSqlServer( builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Configura CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 // Configure JWT authentication
 var key = Convert.ToBase64String(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
 builder.Services.AddAuthentication(options =>
@@ -58,6 +68,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+// Usa la política de CORS configurada
+app.UseCors("AllowSpecificOrigin");
 
 app.UseRouting();
 
