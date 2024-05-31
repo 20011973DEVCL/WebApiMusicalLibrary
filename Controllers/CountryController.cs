@@ -38,7 +38,8 @@ namespace WebApiMusicalLibrary.Controllers
 
                 _response.Result = _mapper.Map<IEnumerable<CountryDto>>(countryList.OrderBy(c =>c.CountryName));
                 _response.statusCode= HttpStatusCode.OK;
-
+                
+                Response.Headers.Add("Custom-Header", "HeaderValue");
                 return Ok(_response);
             }
             catch (Exception ex)

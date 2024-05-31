@@ -38,6 +38,7 @@ namespace WebApiMusicalLibrary.Controllers
             {
                 //Creara Token
                 var token = GenerateJwtToken(user);
+                HttpContext.Response.Headers.Add("Authorization", $"Bearer {token}");
                 return Ok(new { token });
             }
             return Unauthorized();

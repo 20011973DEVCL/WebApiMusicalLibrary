@@ -30,6 +30,16 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy",
+            builder => builder.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader());
+    });
+
+builder.Services.AddControllers();
+
 // Configure JWT authentication
 var key = Convert.ToBase64String(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
 builder.Services.AddAuthentication(options =>
@@ -52,6 +62,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddScoped<IGenreRepository,GenreRepository>();
@@ -73,6 +85,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowSpecificOrigin");
 
 app.UseRouting();
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
