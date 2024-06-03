@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApiMusicalLibrary.Models;
 using WebApiMusicalLibrary.Models.Login;
+using WebApiMusicalLibrary.Models.Sales;
 
 namespace WebApiMusicalLibrary.Data
 {
@@ -13,6 +14,8 @@ namespace WebApiMusicalLibrary.Data
         public DbSet<Songs> Songs { get; set; }
         public DbSet<MenuOptions> MenuOptions { get; set; }
         public DbSet<UserModel> UserModel {get; set;}
+        public DbSet <Order> Order { get; set; }
+        public DbSet <OrderDetail> OrderDetail { get; set; }
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {

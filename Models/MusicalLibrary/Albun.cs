@@ -28,5 +28,7 @@ namespace WebApiMusicalLibrary.Models
 
         [MaxLength(255)]
         public string? Notes { get; set; }
+
+        public double Price { get; set; }
     }
 }

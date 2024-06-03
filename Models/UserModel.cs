@@ -15,6 +15,7 @@ namespace WebApiMusicalLibrary.Models
         public string Rol    { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTime RegistryDate { get; set; }
 
     }
 }

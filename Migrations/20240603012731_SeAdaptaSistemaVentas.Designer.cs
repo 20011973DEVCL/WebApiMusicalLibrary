@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiMusicalLibrary.Data;
 
@@ -11,9 +12,11 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240603012731_SeAdaptaSistemaVentas")]
+    partial class SeAdaptaSistemaVentas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,60 +145,6 @@ namespace WebApiMusicalLibrary.Migrations
                     b.ToTable("MenuOptions");
                 });
 
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.Order", b =>
-                {
-                    b.Property<int>("IdOrder")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdOrder"));
-
-                    b.Property<DateTime>("DateOrder")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Total")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("IdOrder");
-
-                    b.HasIndex("Username");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.OrderDetail", b =>
-                {
-                    b.Property<int>("IdOrderDetail")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdOrderDetail"));
-
-                    b.Property<int>("IdAlbun")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
-
-                    b.HasKey("IdOrderDetail");
-
-                    b.HasIndex("IdAlbun");
-
-                    b.HasIndex("IdOrder");
-
-                    b.ToTable("OrderDetail");
-                });
-
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Songs", b =>
                 {
                     b.Property<int>("IdSong")
@@ -284,36 +233,6 @@ namespace WebApiMusicalLibrary.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.Order", b =>
-                {
-                    b.HasOne("WebApiMusicalLibrary.Models.UserModel", "UserModel")
-                        .WithMany()
-                        .HasForeignKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserModel");
-                });
-
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.OrderDetail", b =>
-                {
-                    b.HasOne("WebApiMusicalLibrary.Models.Albun", "Albun")
-                        .WithMany()
-                        .HasForeignKey("IdAlbun")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApiMusicalLibrary.Models.Sales.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("IdOrder")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Albun");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Songs", b =>
