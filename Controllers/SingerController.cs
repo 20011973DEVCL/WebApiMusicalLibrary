@@ -1,28 +1,27 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using WebApiMusicalLibrary.Models;
 using WebApiMusicalLibrary.Repository.IRepository;
 using System.Net;
-using Microsoft.AspNetCore.Authorization;
+using WebApiMusicalLibrary.Models;
 
 namespace WebApiMusicalLibrary.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class BandSingerController : ControllerBase
+    public class SingerController : ControllerBase
     {
-        private readonly IBandSingerRepository _bandSingerRepo;
+        private readonly ISingerRepository _SingerRepo;
         private readonly ICountryRepository _countryRepo;
         private readonly IAlbunRepository _albunRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public BandSingerController(IBandSingerRepository bandSingerRepo, ICountryRepository countryRepo, IAlbunRepository albunRepo,
+        public SingerController(ISingerRepository SingerRepo, ICountryRepository countryRepo, IAlbunRepository albunRepo,
             ILogger<GenreController> logger, IMapper mapper)
         {
-            _bandSingerRepo = bandSingerRepo;
+            _SingerRepo = SingerRepo;
             _countryRepo = countryRepo;
             _albunRepo = albunRepo;
             _logger = logger;
@@ -32,14 +31,14 @@ namespace WebApiMusicalLibrary.Controllers
  
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetBandSinger()
+        public async Task<ActionResult<APIResponse>> GetSinger()
         {
             try
             {
                 _logger.LogInformation("Get all Band or Singers");
-                IEnumerable<BandSinger> bandSingerList = await _bandSingerRepo.GetAll();
+                IEnumerable<Singer> SingerList = await _SingerRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<BandSingerDto>>(bandSingerList);
+                _response.Result = _mapper.Map<IEnumerable<SingerDto>>(SingerList);
                 _response.statusCode= HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -52,11 +51,11 @@ namespace WebApiMusicalLibrary.Controllers
             return _response;
         }
 
-        [HttpGet("{id}", Name = "GetBandSingers")]
+        [HttpGet("{id}", Name = "GetSingers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<APIResponse>> GetBandSingers(int id)
+        public async Task<ActionResult<APIResponse>> GetSingers(int id)
         {
             try
             {
@@ -68,15 +67,15 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
-                var bandSinger = await _bandSingerRepo.GetOne(v=>v.IdBandSinger==id);
-                if (bandSinger==null)
+                var Singer = await _SingerRepo.GetOne(v=>v.IdSinger==id);
+                if (Singer==null)
                 {
                     _response.Successful = false;
                     _response.statusCode= HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
                 
-                _response.Result = _mapper.Map<BandSingerDto>(bandSinger);
+                _response.Result = _mapper.Map<SingerDto>(Singer);
                 _response.statusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -91,33 +90,33 @@ namespace WebApiMusicalLibrary.Controllers
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<APIResponse>> Search(string? idCountry, string? nameBandSinger)
+        public async Task<ActionResult<APIResponse>> Search(string? idCountry, string? nameSinger)
         {
             try
             {
                 _logger.LogInformation("Get all Band or Singers by ID");
 
-                var bandas = await _bandSingerRepo.GetAll();
+                var bandas = await _SingerRepo.GetAll();
                 var countries = await _countryRepo.GetAll();
 
                 var query =
                 from varBanda in bandas
                 join varCountry in countries on varBanda.IdCountry equals varCountry.IdCountry
                 select new { 
-                            varBanda.IdBandSinger, 
-                            varBanda.BandSingerName, 
+                            varBanda.IdSinger, 
+                            varBanda.SingerName, 
                             varBanda.Members, 
                             varCountry.IdCountry, 
                             varCountry.CountryName,
                             varBanda.StarDate 
                             };
 
-                if (idCountry==null && nameBandSinger!=null) 
+                if (idCountry==null && nameSinger!=null) 
                 {
-                    query = query.Where(q=>q.BandSingerName.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
-                } else if (idCountry!=null && nameBandSinger!=null) {
-                    query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper() && q.BandSingerName.ToUpper().Trim()==nameBandSinger.ToUpper().Trim());
-                } else if (idCountry!=null && nameBandSinger==null) {
+                    query = query.Where(q=>q.SingerName.ToUpper().Trim()==nameSinger.ToUpper().Trim());
+                } else if (idCountry!=null && nameSinger!=null) {
+                    query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper() && q.SingerName.ToUpper().Trim()==nameSinger.ToUpper().Trim());
+                } else if (idCountry!=null && nameSinger==null) {
                     query = query.Where(q=>q.IdCountry.ToUpper()==idCountry.ToUpper());
                 }
 
@@ -146,7 +145,7 @@ namespace WebApiMusicalLibrary.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> CreateBandSinger([FromBody] BandSingerCreateDto createDto)
+        public async Task<ActionResult<APIResponse>> CreateSinger([FromBody] SingerCreateDto createDto)
         {
             try
             {
@@ -155,8 +154,8 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var bandSinger = await _bandSingerRepo.GetOne(v=> v.BandSingerName.ToLower().Trim()== createDto.BandSingerName.ToLower().Trim());
-                if (bandSinger!=null)
+                var Singer = await _SingerRepo.GetOne(v=> v.SingerName.ToLower().Trim()== createDto.SingerName.ToLower().Trim());
+                if (Singer!=null)
                 {
                     ModelState.AddModelError("ValidationOfNames", "The entered Band or Singer already exists");
                     return BadRequest(ModelState);
@@ -167,7 +166,7 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(createDto);
                 }
 
-                BandSinger modelo = _mapper.Map<BandSinger>(createDto);
+                Singer modelo = _mapper.Map<Singer>(createDto);
                 if (modelo.IdCountry!=string.Empty)
                 {
                     var contrySinger= await _countryRepo.GetOne(c=>c.IdCountry.ToLower().Trim() == modelo.IdCountry.ToLower().Trim());
@@ -177,23 +176,23 @@ namespace WebApiMusicalLibrary.Controllers
                     }
                 }
 
-                var keyParent = await _bandSingerRepo.GetAll();
+                var keyParent = await _SingerRepo.GetAll();
                 var idx =0;
                 if (keyParent.Count==0) {
                     idx = 1;
                 } else {
-                    idx = keyParent.OrderByDescending(v=>v.IdBandSinger).FirstOrDefault().IdBandSinger +1;
+                    idx = keyParent.OrderByDescending(v=>v.IdSinger).FirstOrDefault().IdSinger +1;
                 }
 
-                modelo.IdBandSinger = idx;
+                modelo.IdSinger = idx;
                 modelo.DateCreate = DateTime.Now;
                 modelo.DateUpdate = DateTime.Now;
             
-                await _bandSingerRepo.Create(modelo);
+                await _SingerRepo.Create(modelo);
                 _response.Result = modelo;
                 _response.statusCode = HttpStatusCode.Created;
 
-                return CreatedAtRoute("GetBandSingers", new { id = modelo.IdBandSinger}, _response);
+                return CreatedAtRoute("GetSingers", new { id = modelo.IdSinger}, _response);
             }
             catch (Exception ex)
             {
@@ -208,7 +207,7 @@ namespace WebApiMusicalLibrary.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> DeleteBandSinger(int id)
+        public async Task<IActionResult> DeleteSinger(int id)
         {
             try
             {
@@ -220,8 +219,8 @@ namespace WebApiMusicalLibrary.Controllers
                 }
 
                 //Que exista el Grupo o cantante 
-                var bandSinger= await _bandSingerRepo.GetOne(v=>v.IdBandSinger == id);
-                if (bandSinger==null)
+                var Singer= await _SingerRepo.GetOne(v=>v.IdSinger == id);
+                if (Singer==null)
                 {
                     _response.Successful=false;
                     _response.statusCode = HttpStatusCode.NotFound;
@@ -229,13 +228,13 @@ namespace WebApiMusicalLibrary.Controllers
                 }
 
                 //Que Grupo o cantante  no tenga asociado Albunes
-                var existSongs = await _albunRepo.GetOne(s=> s.IdBandSinger == bandSinger.IdBandSinger);
+                var existSongs = await _albunRepo.GetOne(s=> s.IdSinger == Singer.IdSinger);
                 if (existSongs != null)
                 {
                     ModelState.AddModelError("ValidationOfAlbun", "You cannnot Delete this Band or Singer because has Albuns asociated");
                     return BadRequest(ModelState);
                 }
-                await _bandSingerRepo.Delete(bandSinger);
+                await _SingerRepo.Delete(Singer);
                 _response.statusCode = HttpStatusCode.NoContent;
 
                 return Ok(_response);
@@ -251,7 +250,7 @@ namespace WebApiMusicalLibrary.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> UpdateBandSinger([FromBody] BandSingerUpdateDto updateDto, int id)
+        public async Task<IActionResult> UpdateSinger([FromBody] SingerUpdateDto updateDto, int id)
         {
             try
             {
@@ -263,10 +262,10 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
-                BandSinger modelo = _mapper.Map<BandSinger>(updateDto);
+                Singer modelo = _mapper.Map<Singer>(updateDto);
 
                 modelo.DateUpdate = DateTime.Now;
-                await _bandSingerRepo.Update(modelo);
+                await _SingerRepo.Update(modelo);
                 _response.Result = modelo;
                 _response.statusCode = HttpStatusCode.NoContent;
 

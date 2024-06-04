@@ -16,9 +16,10 @@ namespace WebApiMusicalLibrary.Models
         [Required]
         public int IdGenre { get; set; }
 
-        public byte[] Cover { get; set; }
-
         [MaxLength(255)]
         public string Notes { get; set; }
+
+        [Required]
+        public double Price { get; set; }
     }
 }

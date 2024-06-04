@@ -66,12 +66,16 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
-builder.Services.AddScoped<IGenreRepository,GenreRepository>();
+builder.Services.AddScoped<IMusicGenreRepository,MusicGenreRepository>();
 builder.Services.AddScoped<ICountryRepository,CountryRepository>();
-builder.Services.AddScoped<IBandSingerRepository,BandSingerRepository>();
+builder.Services.AddScoped<ISingerRepository,SingerRepository>();
 builder.Services.AddScoped<IAlbunRepository,AlbunRepository>();
 builder.Services.AddScoped<ISongsRepository,SongsRepository>();
 builder.Services.AddScoped<IMenuOptionRepository,MenuOptionRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+
+
 // builder.Services.AddScoped<ILoginUserRepository,LoginUserRepository>();
 
 var app = builder.Build();

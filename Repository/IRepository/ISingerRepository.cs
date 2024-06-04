@@ -2,8 +2,8 @@ using WebApiMusicalLibrary.Models;
 
 namespace WebApiMusicalLibrary.Repository.IRepository
 {
-    public interface IGenreRepository:IRepository<Genre>
+    public interface ISingerRepository: IRepository<Singer>
     {
-        Task<Genre> Update(Genre entity);
+        Task<Singer> Update(Singer entity);
     }
 }

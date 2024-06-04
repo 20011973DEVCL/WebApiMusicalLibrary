@@ -1,21 +1,21 @@
 using WebApiMusicalLibrary.Data;
-using WebApiMusicalLibrary.Models.Login;
+using WebApiMusicalLibrary.Models.Sales;
 using WebApiMusicalLibrary.Repository.IRepository;
 
 namespace WebApiMusicalLibrary.Repository
 {
-    public class MenuOptionRepository : Repository<MenuOptions>, IMenuOptionRepository
+    public class OrderDetailRepository : Repository<OrderDetail>, IOrderDetailRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public MenuOptionRepository(ApplicationDbContext db):base(db)
+        public OrderDetailRepository(ApplicationDbContext db):base(db)
         {
             _db = db;
         }
 
-        public async Task<MenuOptions> Update(MenuOptions entity)
+        public async Task<OrderDetail> Update(OrderDetail entity)
         {
-            _db.MenuOptions.Update(entity);
+            _db.OrderDetail.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
         }

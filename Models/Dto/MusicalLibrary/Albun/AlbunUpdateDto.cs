@@ -18,7 +18,9 @@ namespace WebApiMusicalLibrary.Models
         [Required]
         public int IdGenre { get; set; }
 
-        public byte[]? Cover { get; set; }
         public string? Notes { get; set; }
+        
+        [Required]
+        public double Price { get; set; }
     }
 }

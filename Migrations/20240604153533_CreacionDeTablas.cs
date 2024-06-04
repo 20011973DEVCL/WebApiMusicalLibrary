@@ -24,18 +24,6 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genre",
-                columns: table => new
-                {
-                    IdGenre = table.Column<int>(type: "int", nullable: false),
-                    GenreName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genre", x => x.IdGenre);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MenuOptions",
                 columns: table => new
                 {
@@ -49,6 +37,18 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MusicGenre",
+                columns: table => new
+                {
+                    IdGenre = table.Column<int>(type: "int", nullable: false),
+                    GenreName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MusicGenre", x => x.IdGenre);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserModel",
                 columns: table => new
                 {
@@ -56,7 +56,9 @@ namespace WebApiMusicalLibrary.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegistryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,11 +66,11 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BandSinger",
+                name: "Singer",
                 columns: table => new
                 {
-                    IdBandSinger = table.Column<int>(type: "int", nullable: false),
-                    BandSingerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdSinger = table.Column<int>(type: "int", nullable: false),
+                    SingerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Members = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdCountry = table.Column<string>(type: "nvarchar(3)", nullable: false),
                     StarDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -77,12 +79,32 @@ namespace WebApiMusicalLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BandSinger", x => x.IdBandSinger);
+                    table.PrimaryKey("PK_Singer", x => x.IdSinger);
                     table.ForeignKey(
-                        name: "FK_BandSinger_Country_IdCountry",
+                        name: "FK_Singer_Country_IdCountry",
                         column: x => x.IdCountry,
                         principalTable: "Country",
                         principalColumn: "IdCountry",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    IdOrder = table.Column<int>(type: "int", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DateOrder = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.IdOrder);
+                    table.ForeignKey(
+                        name: "FK_Order_UserModel_Username",
+                        column: x => x.Username,
+                        principalTable: "UserModel",
+                        principalColumn: "Username",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -93,25 +115,54 @@ namespace WebApiMusicalLibrary.Migrations
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
                     AlbunName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AlbunYear = table.Column<int>(type: "int", nullable: true),
+                    IdSinger = table.Column<int>(type: "int", nullable: false),
                     IdBandSinger = table.Column<int>(type: "int", nullable: false),
                     IdGenre = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Albun", x => x.IdAlbun);
                     table.ForeignKey(
-                        name: "FK_Albun_BandSinger_IdBandSinger",
-                        column: x => x.IdBandSinger,
-                        principalTable: "BandSinger",
-                        principalColumn: "IdBandSinger",
+                        name: "FK_Albun_MusicGenre_IdGenre",
+                        column: x => x.IdGenre,
+                        principalTable: "MusicGenre",
+                        principalColumn: "IdGenre",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Albun_Genre_IdGenre",
-                        column: x => x.IdGenre,
-                        principalTable: "Genre",
-                        principalColumn: "IdGenre",
+                        name: "FK_Albun_Singer_IdBandSinger",
+                        column: x => x.IdBandSinger,
+                        principalTable: "Singer",
+                        principalColumn: "IdSinger",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderDetail",
+                columns: table => new
+                {
+                    IdOrderDetail = table.Column<int>(type: "int", nullable: false),
+                    IdOrder = table.Column<int>(type: "int", nullable: false),
+                    IdAlbun = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDetail", x => x.IdOrderDetail);
+                    table.ForeignKey(
+                        name: "FK_OrderDetail_Albun_IdAlbun",
+                        column: x => x.IdAlbun,
+                        principalTable: "Albun",
+                        principalColumn: "IdAlbun",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderDetail_Order_IdOrder",
+                        column: x => x.IdOrder,
+                        principalTable: "Order",
+                        principalColumn: "IdOrder",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -147,8 +198,23 @@ namespace WebApiMusicalLibrary.Migrations
                 column: "IdGenre");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BandSinger_IdCountry",
-                table: "BandSinger",
+                name: "IX_Order_Username",
+                table: "Order",
+                column: "Username");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetail_IdAlbun",
+                table: "OrderDetail",
+                column: "IdAlbun");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetail_IdOrder",
+                table: "OrderDetail",
+                column: "IdOrder");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Singer_IdCountry",
+                table: "Singer",
                 column: "IdCountry");
 
             migrationBuilder.CreateIndex(
@@ -164,19 +230,25 @@ namespace WebApiMusicalLibrary.Migrations
                 name: "MenuOptions");
 
             migrationBuilder.DropTable(
+                name: "OrderDetail");
+
+            migrationBuilder.DropTable(
                 name: "Songs");
 
             migrationBuilder.DropTable(
-                name: "UserModel");
+                name: "Order");
 
             migrationBuilder.DropTable(
                 name: "Albun");
 
             migrationBuilder.DropTable(
-                name: "BandSinger");
+                name: "UserModel");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "MusicGenre");
+
+            migrationBuilder.DropTable(
+                name: "Singer");
 
             migrationBuilder.DropTable(
                 name: "Country");

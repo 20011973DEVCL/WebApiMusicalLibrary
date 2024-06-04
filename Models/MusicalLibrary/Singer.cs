@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class BandSinger
+    public class Singer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int IdBandSinger { get; set; }
-        public string BandSingerName { get; set; } = string.Empty;
+        public int IdSinger { get; set; }
+        public string SingerName { get; set; } = string.Empty;
         
         public string? Members { get; set; }
         

@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class BandSingerDto
+    public class SingerDto
     {
-        public int IdBandSinger { get; set; }
-        public string BandSingerName { get; set; } = string.Empty;
+        public int IdSinger { get; set; }
+        public string SingerName { get; set; } = string.Empty;
         public string Members { get; set; }
         
         [Required]

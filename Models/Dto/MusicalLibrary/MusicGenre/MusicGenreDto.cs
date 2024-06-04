@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class GenreDto
+    public class MusicGenreDto
     {
         public int IdGenre { get; set; }
         
