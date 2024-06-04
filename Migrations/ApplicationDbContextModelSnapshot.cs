@@ -34,59 +34,27 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<int?>("AlbunYear")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Cover")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("IdBandSinger")
+                    b.Property<int?>("IdMusicGenre")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdGenre")
-                        .IsRequired()
+                    b.Property<int>("IdSinger")
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<DateTime>("PublishDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("IdAlbun");
 
-                    b.HasIndex("IdBandSinger");
+                    b.HasIndex("IdMusicGenre");
 
-                    b.HasIndex("IdGenre");
+                    b.HasIndex("IdSinger");
 
                     b.ToTable("Albun");
-                });
-
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.BandSinger", b =>
-                {
-                    b.Property<int>("IdBandSinger")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BandSingerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IdCountry")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(3)");
-
-                    b.Property<string>("Members")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("StarDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("IdBandSinger");
-
-                    b.HasIndex("IdCountry");
-
-                    b.ToTable("BandSinger");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Country", b =>
@@ -103,21 +71,6 @@ namespace WebApiMusicalLibrary.Migrations
                     b.HasKey("IdCountry");
 
                     b.ToTable("Country");
-                });
-
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.Genre", b =>
-                {
-                    b.Property<int>("IdGenre")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GenreName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("IdGenre");
-
-                    b.ToTable("Genre");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Login.MenuOptions", b =>
@@ -137,6 +90,53 @@ namespace WebApiMusicalLibrary.Migrations
                     b.HasKey("IdOption");
 
                     b.ToTable("MenuOptions");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.MusicGenre", b =>
+                {
+                    b.Property<int>("IdMusicGenre")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GenreName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("IdMusicGenre");
+
+                    b.ToTable("MusicGenre");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Singer", b =>
+                {
+                    b.Property<int>("IdSinger")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IdCountry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("Members")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SingerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StarDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("IdSinger");
+
+                    b.HasIndex("IdCountry");
+
+                    b.ToTable("Singer");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Songs", b =>
@@ -166,7 +166,7 @@ namespace WebApiMusicalLibrary.Migrations
                     b.ToTable("Songs");
                 });
 
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.UserModel", b =>
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.User", b =>
                 {
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
@@ -193,29 +193,29 @@ namespace WebApiMusicalLibrary.Migrations
 
                     b.HasKey("Username");
 
-                    b.ToTable("UserModel");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Albun", b =>
                 {
-                    b.HasOne("WebApiMusicalLibrary.Models.BandSinger", "BandSinger")
+                    b.HasOne("WebApiMusicalLibrary.Models.MusicGenre", "MusicGenre")
                         .WithMany()
-                        .HasForeignKey("IdBandSinger")
+                        .HasForeignKey("IdMusicGenre")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApiMusicalLibrary.Models.Genre", "Genre")
+                    b.HasOne("WebApiMusicalLibrary.Models.Singer", "Singer")
                         .WithMany()
-                        .HasForeignKey("IdGenre")
+                        .HasForeignKey("IdSinger")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BandSinger");
+                    b.Navigation("MusicGenre");
 
-                    b.Navigation("Genre");
+                    b.Navigation("Singer");
                 });
 
-            modelBuilder.Entity("WebApiMusicalLibrary.Models.BandSinger", b =>
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Singer", b =>
                 {
                     b.HasOne("WebApiMusicalLibrary.Models.Country", "Country")
                         .WithMany()

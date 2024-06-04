@@ -11,17 +11,17 @@ namespace WebApiMusicalLibrary
             CreateMap<Albun,AlbunCreateDto>().ReverseMap();
             CreateMap<Albun,AlbunUpdateDto>().ReverseMap();
 
-            CreateMap<BandSinger,BandSingerDto>().ReverseMap();
-            CreateMap<BandSinger,BandSingerCreateDto>().ReverseMap();
-            CreateMap<BandSinger,BandSingerUpdateDto>().ReverseMap();
+            CreateMap<Singer,SingerDto>().ReverseMap();
+            CreateMap<Singer,SingerCreateDto>().ReverseMap();
+            CreateMap<Singer,SingerUpdateDto>().ReverseMap();
 
             CreateMap<Country,CountryDto>().ReverseMap();
             CreateMap<Country,CountryCreateDto>().ReverseMap();
             CreateMap<Country,CountryUpdateDto>().ReverseMap();
 
-            CreateMap<Genre,GenreDto>().ReverseMap();
-            CreateMap<Genre,GenreCreateDto>().ReverseMap();
-            CreateMap<Genre,GenreUpdateDto>().ReverseMap();
+            CreateMap<MusicGenre,MusicGenreDto>().ReverseMap();
+            CreateMap<MusicGenre,MusicGenreCreateDto>().ReverseMap();
+            CreateMap<MusicGenre,MusicGenreUpdateDto>().ReverseMap();
 
             CreateMap<Songs,SongsDto>().ReverseMap();
             CreateMap<Songs,SongsCreateDto>().ReverseMap();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class UserModel
+    public class User
     {
         [Key]
         public string Username { get; set; }

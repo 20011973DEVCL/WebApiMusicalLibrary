@@ -15,13 +15,13 @@ namespace WebApiMusicalLibrary.Controllers
         private readonly ISongsRepository _songsRepo;
         private readonly IAlbunRepository _albunRepo;
         private readonly ICountryRepository _countryRepo;
-        private readonly IBandSingerRepository _bandSingerRepo;
-        private readonly IGenreRepository _genreRepo;
+        private readonly ISingerRepository _bandSingerRepo;
+        private readonly IMusicGenreRepository _genreRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public SongsController(ISongsRepository songsRepo, IAlbunRepository albunRepo, ILogger<GenreController> logger, IMapper mapper, ICountryRepository countryRepo, IBandSingerRepository bandSingerRepo, IGenreRepository genreRepo)
+        public SongsController(ISongsRepository songsRepo, IAlbunRepository albunRepo, ILogger<GenreController> logger, IMapper mapper, ICountryRepository countryRepo, ISingerRepository bandSingerRepo, IMusicGenreRepository genreRepo)
         {
             _songsRepo = songsRepo;
             _albunRepo = albunRepo;

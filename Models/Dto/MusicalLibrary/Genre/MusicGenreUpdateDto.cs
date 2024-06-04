@@ -2,9 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApiMusicalLibrary.Models
 {
-    public class GenreDto
+    public class MusicGenreUpdateDto
     {
-        public int IdGenre { get; set; }
+        [Required]
+        public int IdMusicGenre { get; set; }
         
         [Required]
         [MaxLength(30)]

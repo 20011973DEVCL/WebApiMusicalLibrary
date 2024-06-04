@@ -13,20 +13,21 @@ namespace WebApiMusicalLibrary.Models
         public int? AlbunYear { get; set; }
 
         [Required]
-        public int IdBandSinger { get; set; }
+        public int IdSinger { get; set; }
 
-        [ForeignKey("IdBandSinger")]
-        public BandSinger BandSinger { get; set; }
+        [ForeignKey("IdSinger")]
+        public Singer Singer { get; set; }
 
         [Required]
-        public int? IdGenre { get; set; }
+        public int? IdMusicGenre { get; set; }
 
-        [ForeignKey("IdGenre")]
-        public Genre? Genre { get; set; }
-
-        public byte[]? Cover { get; set; }
+        [ForeignKey("IdMusicGenre")]
+        public MusicGenre? MusicGenre { get; set; }
 
         [MaxLength(255)]
         public string? Notes { get; set; }
+
+        [Required]
+        public DateTime PublishDate { get; set; }
     }
 }

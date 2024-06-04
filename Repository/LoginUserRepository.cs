@@ -8,7 +8,7 @@ using WebApiMusicalLibrary.Repository.IRepository;
 
 namespace WebApiMusicalLibrary.Repository
 {
-    public class LoginUserRepository : Repository<UserModel>, ILoginUserRepository
+    public class LoginUserRepository : Repository<User>, ILoginUserRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -17,9 +17,9 @@ namespace WebApiMusicalLibrary.Repository
             _db = db;
         }
 
-        public async Task<UserModel> Update(UserModel entity)
+        public async Task<User> Update(User entity)
         {
-            _db.UserModel.Update(entity);
+            _db.User.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
         }

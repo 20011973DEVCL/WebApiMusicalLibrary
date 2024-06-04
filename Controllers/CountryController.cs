@@ -13,12 +13,12 @@ namespace WebApiMusicalLibrary.Controllers
     public class CountryController : ControllerBase
     {
         private readonly ICountryRepository _countryRepo;
-        private readonly IBandSingerRepository _bandSingerRepo;
+        private readonly ISingerRepository _bandSingerRepo;
         private readonly ILogger<GenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public CountryController(ICountryRepository countryRepo,IBandSingerRepository bandSingerRepo, ILogger<GenreController> logger, IMapper mapper)
+        public CountryController(ICountryRepository countryRepo,ISingerRepository bandSingerRepo, ILogger<GenreController> logger, IMapper mapper)
         {
             _countryRepo = countryRepo;
             _bandSingerRepo = bandSingerRepo;

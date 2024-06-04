@@ -44,9 +44,9 @@ namespace WebApiMusicalLibrary.Controllers
             return Unauthorized();
         }
 
-        private UserModel Autheticate(LoginUser userLogin)
+        private User Autheticate(LoginUser userLogin)
         {
-            var currentUser = _db.UserModel.FirstOrDefault(user => user.Username.ToLower() == userLogin.Username.ToLower()
+            var currentUser = _db.User.FirstOrDefault(user => user.Username.ToLower() == userLogin.Username.ToLower()
                                 && user.Password == userLogin.Password);
 
             if (currentUser!= null)
@@ -56,7 +56,7 @@ namespace WebApiMusicalLibrary.Controllers
             return null;
         } 
 
-        private string GenerateJwtToken(UserModel user)
+        private string GenerateJwtToken(User user)
         {
             string SecretKey = _config["Jwt:Key"];
             string EncodedKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(SecretKey));

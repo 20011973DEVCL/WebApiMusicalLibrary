@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebApiMusicalLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionDeTablas : Migration
+    public partial class SeCreanTablas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,18 +24,6 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genre",
-                columns: table => new
-                {
-                    IdGenre = table.Column<int>(type: "int", nullable: false),
-                    GenreName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genre", x => x.IdGenre);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MenuOptions",
                 columns: table => new
                 {
@@ -49,26 +37,39 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserModel",
+                name: "MusicGenre",
+                columns: table => new
+                {
+                    IdMusicGenre = table.Column<int>(type: "int", nullable: false),
+                    GenreName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MusicGenre", x => x.IdMusicGenre);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
                 columns: table => new
                 {
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserModel", x => x.Username);
+                    table.PrimaryKey("PK_User", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BandSinger",
+                name: "Singer",
                 columns: table => new
                 {
-                    IdBandSinger = table.Column<int>(type: "int", nullable: false),
-                    BandSingerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdSinger = table.Column<int>(type: "int", nullable: false),
+                    SingerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Members = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdCountry = table.Column<string>(type: "nvarchar(3)", nullable: false),
                     StarDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -77,9 +78,9 @@ namespace WebApiMusicalLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BandSinger", x => x.IdBandSinger);
+                    table.PrimaryKey("PK_Singer", x => x.IdSinger);
                     table.ForeignKey(
-                        name: "FK_BandSinger_Country_IdCountry",
+                        name: "FK_Singer_Country_IdCountry",
                         column: x => x.IdCountry,
                         principalTable: "Country",
                         principalColumn: "IdCountry",
@@ -93,25 +94,25 @@ namespace WebApiMusicalLibrary.Migrations
                     IdAlbun = table.Column<int>(type: "int", nullable: false),
                     AlbunName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AlbunYear = table.Column<int>(type: "int", nullable: true),
-                    IdBandSinger = table.Column<int>(type: "int", nullable: false),
-                    IdGenre = table.Column<int>(type: "int", nullable: false),
-                    Cover = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    IdSinger = table.Column<int>(type: "int", nullable: false),
+                    IdMusicGenre = table.Column<int>(type: "int", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Albun", x => x.IdAlbun);
                     table.ForeignKey(
-                        name: "FK_Albun_BandSinger_IdBandSinger",
-                        column: x => x.IdBandSinger,
-                        principalTable: "BandSinger",
-                        principalColumn: "IdBandSinger",
+                        name: "FK_Albun_MusicGenre_IdMusicGenre",
+                        column: x => x.IdMusicGenre,
+                        principalTable: "MusicGenre",
+                        principalColumn: "IdMusicGenre",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Albun_Genre_IdGenre",
-                        column: x => x.IdGenre,
-                        principalTable: "Genre",
-                        principalColumn: "IdGenre",
+                        name: "FK_Albun_Singer_IdSinger",
+                        column: x => x.IdSinger,
+                        principalTable: "Singer",
+                        principalColumn: "IdSinger",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -137,18 +138,18 @@ namespace WebApiMusicalLibrary.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Albun_IdBandSinger",
+                name: "IX_Albun_IdMusicGenre",
                 table: "Albun",
-                column: "IdBandSinger");
+                column: "IdMusicGenre");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Albun_IdGenre",
+                name: "IX_Albun_IdSinger",
                 table: "Albun",
-                column: "IdGenre");
+                column: "IdSinger");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BandSinger_IdCountry",
-                table: "BandSinger",
+                name: "IX_Singer_IdCountry",
+                table: "Singer",
                 column: "IdCountry");
 
             migrationBuilder.CreateIndex(
@@ -167,16 +168,16 @@ namespace WebApiMusicalLibrary.Migrations
                 name: "Songs");
 
             migrationBuilder.DropTable(
-                name: "UserModel");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Albun");
 
             migrationBuilder.DropTable(
-                name: "BandSinger");
+                name: "MusicGenre");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "Singer");
 
             migrationBuilder.DropTable(
                 name: "Country");

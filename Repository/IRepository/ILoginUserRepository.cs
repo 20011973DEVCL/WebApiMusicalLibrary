@@ -6,8 +6,8 @@ using WebApiMusicalLibrary.Models;
 
 namespace WebApiMusicalLibrary.Repository.IRepository
 {
-    public interface ILoginUserRepository:IRepository<UserModel>
+    public interface ILoginUserRepository:IRepository<User>
     {
-        Task<UserModel> Update(UserModel entity);
+        Task<User> Update(User entity);
     }
 }

@@ -4,18 +4,18 @@ using WebApiMusicalLibrary.Repository.IRepository;
 
 namespace WebApiMusicalLibrary.Repository
 {
-    public class GenreRepository : Repository<Genre>, IGenreRepository
+    public class MusicGenreRepository : Repository<MusicGenre>, IMusicGenreRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public GenreRepository(ApplicationDbContext db):base(db)
+        public MusicGenreRepository(ApplicationDbContext db):base(db)
         {
             _db = db;
         }
 
-        public async Task<Genre> Update(Genre entity)
+        public async Task<MusicGenre> Update(MusicGenre entity)
         {
-            _db.Genre.Update(entity);
+            _db.MusicGenre.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
         }

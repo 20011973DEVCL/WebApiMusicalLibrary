@@ -13,8 +13,8 @@ namespace WebApiMusicalLibrary.Controllers
     public class AlbunController : ControllerBase
     {
         private readonly IAlbunRepository _albunRepo;
-        private readonly IBandSingerRepository _bandSingerRepo;
-        private readonly IGenreRepository _genreRepo;
+        private readonly ISingerRepository _bandSingerRepo;
+        private readonly IMusicGenreRepository _genreRepo;
         private readonly ISongsRepository _songsRepo;
         private readonly ICountryRepository _countryRepo;
         private readonly ILogger<GenreController> _logger;
@@ -22,9 +22,9 @@ namespace WebApiMusicalLibrary.Controllers
         private APIResponse _response;
 
         public AlbunController( IAlbunRepository albunRepo, 
-                                IBandSingerRepository bandSingerRepo, 
+                                ISingerRepository bandSingerRepo, 
                                 ISongsRepository songsRepo,
-                                IGenreRepository genreRepo, 
+                                IMusicGenreRepository genreRepo, 
                                 ICountryRepository countryRepo,
                                 ILogger<GenreController> logger, IMapper mapper)
         {
@@ -112,41 +112,41 @@ namespace WebApiMusicalLibrary.Controllers
                 var query = 
                 from varAlbun in albun 
                 join varBanda in banda on 
-                varAlbun.IdBandSinger equals varBanda.IdBandSinger join varPais in pais 
+                varAlbun.IdSinger equals varBanda.IdSinger join varPais in pais 
                     on varBanda.IdCountry equals varPais.IdCountry
-                join varGenero in genero on varAlbun.IdGenre equals varGenero.IdGenre
+                join varGenero in genero on varAlbun.IdMusicGenre equals varGenero.IdMusicGenre
                 select new {
                             varAlbun.IdAlbun,
                             varAlbun.AlbunName,
                             varAlbun.AlbunYear,
-                            varBanda.IdBandSinger,
-                            varBanda.BandSingerName,
+                            varBanda.IdSinger,
+                            varBanda.SingerName,
                             varBanda.StarDate,
                             varAlbun.Notes,
                             varPais.IdCountry,
                             varPais.CountryName,
-                            varGenero.IdGenre,
+                            varGenero.IdMusicGenre,
                             varGenero.GenreName
                             };
 
                 if  (nombreAlbun!=null && nombreBandaCantante!=null && IdGenero!=null && IdPais!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
-                                        q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
-                                        q.IdGenre == IdGenero &&
+                                        q.SingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
+                                        q.IdMusicGenre == IdGenero &&
                                         q.IdCountry.ToUpper()==IdPais.ToUpper());
                 } else if (nombreAlbun!=null && nombreBandaCantante!=null && IdGenero!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
-                                        q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
-                                        q.IdGenre == IdGenero);
+                                        q.SingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim() &&
+                                        q.IdMusicGenre == IdGenero);
                 } else if (nombreAlbun!=null && nombreBandaCantante!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim() &&
-                                        q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
+                                        q.SingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
                 } else if (nombreAlbun!=null) {
                     query = query.Where(q=>q.AlbunName.ToUpper().Trim()==nombreAlbun.ToUpper().Trim());
                 } else if (nombreBandaCantante!=null) {
-                    query = query.Where(q=>q.BandSingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
+                    query = query.Where(q=>q.SingerName.ToUpper().Trim()==nombreBandaCantante.ToUpper().Trim());
                 }  else if (IdGenero!=null) {
-                    query = query.Where(q=>q.IdGenre==IdGenero);
+                    query = query.Where(q=>q.IdMusicGenre==IdGenero);
                 } else if (IdPais!=null) {
                     query = query.Where(q=>q.IdCountry.ToUpper().Trim()==IdPais.ToUpper().Trim());
                 } 
@@ -192,14 +192,14 @@ namespace WebApiMusicalLibrary.Controllers
                 Albun modelo = _mapper.Map<Albun>(createDto);
 
                 //Exista Grupo o Cantante Asociado
-                var bandSinger= await _bandSingerRepo.GetOne(b=>b.IdBandSinger == modelo.IdBandSinger);
+                var bandSinger= await _bandSingerRepo.GetOne(b=>b.IdSinger == modelo.IdSinger);
                 if (bandSinger==null) {
                     ModelState.AddModelError("ValidationOfBandSinger","The entered Band or Singer does not exist" );
                     return BadRequest(ModelState);      
                 }
 
                 //Exista Genero Asociado
-                var genre = await _genreRepo.GetOne(g=>g.IdGenre == modelo.IdGenre);
+                var genre = await _genreRepo.GetOne(g=>g.IdMusicGenre == modelo.IdMusicGenre);
                 if (genre == null) {
                     ModelState.AddModelError("ValidationOfGenre","The entered Genre does not exist" );
                     return BadRequest(ModelState);    

@@ -13,12 +13,14 @@ namespace WebApiMusicalLibrary.Models
         public int? AlbunYear { get; set; }
 
         [Required]
-        public int IdBandSinger { get; set; }
+        public int IdSinger { get; set; }
 
         [Required]
-        public int IdGenre { get; set; }
+        public int IdMusicGenre { get; set; }
 
-        public byte[]? Cover { get; set; }
         public string? Notes { get; set; }
+
+        [Required]
+        public DateTime PublishDate { get; set; }
     }
 }

@@ -10,15 +10,15 @@ namespace WebApiMusicalLibrary.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class GenreController : ControllerBase
+    public class MusicGenreController : ControllerBase
     {
-        private readonly IGenreRepository _genreRepo;
+        private readonly IMusicGenreRepository _genreRepo;
         private readonly IAlbunRepository _albunRepo;
-        private readonly ILogger<GenreController> _logger;
+        private readonly ILogger<MusicGenreController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public GenreController(IGenreRepository genreRepo, IAlbunRepository albunRepo, ILogger<GenreController> logger, IMapper mapper)
+        public MusicGenreController(IMusicGenreRepository genreRepo, IAlbunRepository albunRepo, ILogger<MusicGenreController> logger, IMapper mapper)
         {
             _genreRepo = genreRepo;
             _albunRepo = albunRepo;
@@ -34,9 +34,9 @@ namespace WebApiMusicalLibrary.Controllers
             try
             {
                 _logger.LogInformation("Get all Musical Types Genres");
-                IEnumerable<Genre> genreList = await _genreRepo.GetAll();
+                IEnumerable<MusicGenre> genreList = await _genreRepo.GetAll();
 
-                _response.Result = _mapper.Map<IEnumerable<GenreDto>>(genreList);
+                _response.Result = _mapper.Map<IEnumerable<MusicGenreDto>>(genreList);
                 _response.statusCode= HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -65,15 +65,15 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(_response);
                 }
 
-                var genre = await _genreRepo.GetOne(v=>v.IdGenre==id);
-                if (genre==null)
+                var MusicGenre = await _genreRepo.GetOne(v=>v.IdMusicGenre==id);
+                if (MusicGenre==null)
                 {
                     _response.Successful = false;
                     _response.statusCode= HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
                 
-                _response.Result = _mapper.Map<GenreDto>(genre);
+                _response.Result = _mapper.Map<MusicGenreDto>(MusicGenre);
                 _response.statusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -89,7 +89,7 @@ namespace WebApiMusicalLibrary.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> CreateGenre([FromBody] GenreCreateDto createDto)
+        public async Task<ActionResult<APIResponse>> CreateGenre([FromBody] MusicGenreCreateDto createDto)
         {
             try
             {
@@ -98,10 +98,10 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var genre = await _genreRepo.GetOne(v=> v.GenreName.ToLower().Trim()== createDto.GenreName.ToLower().Trim());
-                if (genre!=null)
+                var MusicGenre = await _genreRepo.GetOne(v=> v.GenreName.ToLower().Trim()== createDto.GenreName.ToLower().Trim());
+                if (MusicGenre!=null)
                 {
-                    ModelState.AddModelError("ValidationOfNames", "The entered Genre already exists");
+                    ModelState.AddModelError("ValidationOfNames", "The entered MusicGenre already exists");
                     return BadRequest(ModelState);
                 }
 
@@ -110,16 +110,16 @@ namespace WebApiMusicalLibrary.Controllers
                     return BadRequest(createDto);
                 }
 
-                Genre modelo = _mapper.Map<Genre>(createDto);
+                MusicGenre modelo = _mapper.Map<MusicGenre>(createDto);
 
                 var idx = await _genreRepo.GetAll();
-                modelo.IdGenre =  idx.OrderByDescending(v=>v.IdGenre).FirstOrDefault().IdGenre +1;
+                modelo.IdMusicGenre =  idx.OrderByDescending(v=>v.IdMusicGenre).FirstOrDefault().IdMusicGenre +1;
                  
                 await _genreRepo.Create(modelo);
                 _response.Result = modelo;
                 _response.statusCode = HttpStatusCode.Created;
 
-                return CreatedAtRoute("GetGenre", new { id = modelo.IdGenre}, _response);
+                return CreatedAtRoute("GetGenre", new { id = modelo.IdMusicGenre}, _response);
             }
             catch (Exception ex)
             {
@@ -146,8 +146,8 @@ namespace WebApiMusicalLibrary.Controllers
                 }
 
                 //Existe genero
-                var genre= await _genreRepo.GetOne(v=>v.IdGenre == id);
-                if (genre==null)
+                var MusicGenre= await _genreRepo.GetOne(v=>v.IdMusicGenre == id);
+                if (MusicGenre==null)
                 {
                     _response.Successful=false;
                     _response.statusCode = HttpStatusCode.NotFound;
@@ -155,14 +155,14 @@ namespace WebApiMusicalLibrary.Controllers
                 }
 
                 //Genero tiene asociados Albunes
-                var existAlbun = await _albunRepo.GetOne(b=>b.IdGenre == genre.IdGenre);
+                var existAlbun = await _albunRepo.GetOne(b=>b.IdMusicGenre == MusicGenre.IdMusicGenre);
                 if (existAlbun != null)
                 {
-                    ModelState.AddModelError("ValidationOfAlbun", "You cannnot Delete this Genre because has Albuns asociated");
+                    ModelState.AddModelError("ValidationOfAlbun", "You cannnot Delete this MusicGenre because has Albuns asociated");
                     return BadRequest(ModelState);
                 }
 
-                await _genreRepo.Delete(genre);
+                await _genreRepo.Delete(MusicGenre);
                 _response.statusCode = HttpStatusCode.NoContent;
 
                 return Ok(_response);
@@ -178,18 +178,18 @@ namespace WebApiMusicalLibrary.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] 
-        public async Task<IActionResult> UpdateGenre([FromBody] GenreUpdateDto updateDto, int id)
+        public async Task<IActionResult> UpdateGenre([FromBody] MusicGenreUpdateDto updateDto, int id)
         {
             try
             {
-                if (updateDto == null || id!= updateDto.IdGenre)
+                if (updateDto == null || id!= updateDto.IdMusicGenre)
                 {
                     _response.Successful=false;
                     _response.statusCode =HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
 
-                Genre modelo = _mapper.Map<Genre>(updateDto);
+                MusicGenre modelo = _mapper.Map<MusicGenre>(updateDto);
 
                 await _genreRepo.Update(modelo);
                 _response.Result = modelo;
