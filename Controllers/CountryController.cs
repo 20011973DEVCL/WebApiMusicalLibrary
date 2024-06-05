@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiMusicalLibrary.Models;
 using WebApiMusicalLibrary.Repository.IRepository;
 using System.Net;
-using Microsoft.AspNetCore.Authorization;
 
 namespace WebApiMusicalLibrary.Controllers
 {
@@ -14,11 +13,14 @@ namespace WebApiMusicalLibrary.Controllers
     {
         private readonly ICountryRepository _countryRepo;
         private readonly ISingerRepository _bandSingerRepo;
-        private readonly ILogger<GenreController> _logger;
+        private readonly ILogger<CountryController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public CountryController(ICountryRepository countryRepo,ISingerRepository bandSingerRepo, ILogger<GenreController> logger, IMapper mapper)
+        public CountryController(ICountryRepository countryRepo,
+                                 ISingerRepository bandSingerRepo, 
+                                 ILogger<CountryController> logger, 
+                                 IMapper mapper)
         {
             _countryRepo = countryRepo;
             _bandSingerRepo = bandSingerRepo;

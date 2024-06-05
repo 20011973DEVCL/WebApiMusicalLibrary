@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiMusicalLibrary.Models;
 using WebApiMusicalLibrary.Repository.IRepository;
 using System.Net;
-using Microsoft.AspNetCore.Authorization;
 
 namespace WebApiMusicalLibrary.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MusicGenreController : ControllerBase
@@ -18,7 +17,10 @@ namespace WebApiMusicalLibrary.Controllers
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public MusicGenreController(IMusicGenreRepository genreRepo, IAlbunRepository albunRepo, ILogger<MusicGenreController> logger, IMapper mapper)
+        public MusicGenreController(IMusicGenreRepository genreRepo, 
+                                    IAlbunRepository albunRepo, 
+                                    ILogger<MusicGenreController> logger, 
+                                    IMapper mapper)
         {
             _genreRepo = genreRepo;
             _albunRepo = albunRepo;

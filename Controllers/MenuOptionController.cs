@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +13,13 @@ namespace WebApiMusicalLibrary.Controllers
     public class MenuOptionController : ControllerBase
     {
         private readonly IMenuOptionRepository _menuOptRepo;
-        private readonly ILogger<GenreController> _logger;
+        private readonly ILogger<MenuOptionController> _logger;
         private readonly IMapper _mapper;
         private APIResponse _response;
 
-        public MenuOptionController(IMenuOptionRepository menuOptRepo, ILogger<GenreController> logger, IMapper mapper)
+        public MenuOptionController(IMenuOptionRepository menuOptRepo, 
+                                    ILogger<MenuOptionController> logger, 
+                                    IMapper mapper)
         {
             _menuOptRepo = menuOptRepo;
             _logger = logger;

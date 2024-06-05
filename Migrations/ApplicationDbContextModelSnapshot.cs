@@ -107,6 +107,57 @@ namespace WebApiMusicalLibrary.Migrations
                     b.ToTable("MusicGenre");
                 });
 
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("Username");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.OrderItem", b =>
+                {
+                    b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
+
+                    b.Property<int>("IdAlbun")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("IdAlbun");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Singer", b =>
                 {
                     b.Property<int>("IdSinger")
@@ -149,6 +200,9 @@ namespace WebApiMusicalLibrary.Migrations
 
                     b.Property<int>("IdAlbun")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("PublishDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SongName")
                         .IsRequired()
@@ -215,6 +269,36 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Navigation("Singer");
                 });
 
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.Order", b =>
+                {
+                    b.HasOne("WebApiMusicalLibrary.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Username")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.OrderItem", b =>
+                {
+                    b.HasOne("WebApiMusicalLibrary.Models.Albun", "Album")
+                        .WithMany()
+                        .HasForeignKey("IdAlbun")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApiMusicalLibrary.Models.Sales.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Album");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("WebApiMusicalLibrary.Models.Singer", b =>
                 {
                     b.HasOne("WebApiMusicalLibrary.Models.Country", "Country")
@@ -235,6 +319,11 @@ namespace WebApiMusicalLibrary.Migrations
                         .IsRequired();
 
                     b.Navigation("Albun");
+                });
+
+            modelBuilder.Entity("WebApiMusicalLibrary.Models.Sales.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

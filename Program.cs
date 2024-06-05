@@ -71,7 +71,6 @@ builder.Services.AddScoped<ISingerRepository,SingerRepository>();
 builder.Services.AddScoped<IAlbunRepository,AlbunRepository>();
 builder.Services.AddScoped<ISongsRepository,SongsRepository>();
 builder.Services.AddScoped<IMenuOptionRepository,MenuOptionRepository>();
-// builder.Services.AddScoped<ILoginUserRepository,LoginUserRepository>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

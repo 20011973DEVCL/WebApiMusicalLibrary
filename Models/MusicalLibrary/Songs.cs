@@ -22,5 +22,7 @@ namespace WebApiMusicalLibrary.Models
         public string SongName { get; set; }
 
         public int? Disc { get; set; }
+
+        public DateTime? PublishDate { get; set; }
     }
 }
