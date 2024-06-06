@@ -10,7 +10,7 @@ namespace WebApiMusicalLibrary.Models
         
         public string AlbunName { get; set; } = string.Empty;
 
-        public int? AlbunYear { get; set; }
+        public int AlbunYear { get; set; }
 
         [Required]
         public int IdSinger { get; set; }
@@ -27,7 +27,5 @@ namespace WebApiMusicalLibrary.Models
         [MaxLength(255)]
         public string? Notes { get; set; }
 
-        [Required]
-        public DateTime PublishDate { get; set; }
     }
 }

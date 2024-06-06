@@ -16,6 +16,6 @@ namespace WebApiMusicalLibrary.Models
 
         public int? Disc { get; set; }
 
-        public DateTime? PublishDate { get; set; }
+        public int PublishYear { get; set; }
     }
 }

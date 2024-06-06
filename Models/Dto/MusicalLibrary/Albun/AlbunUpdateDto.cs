@@ -19,8 +19,5 @@ namespace WebApiMusicalLibrary.Models
         public int IdMusicGenre { get; set; }
 
         public string? Notes { get; set; }
-
-        [Required]
-        public DateTime PublishDate { get; set; }
     }
 }

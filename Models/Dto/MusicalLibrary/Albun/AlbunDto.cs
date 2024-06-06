@@ -19,7 +19,5 @@ namespace WebApiMusicalLibrary.Models
         [MaxLength(255)]
         public string Notes { get; set; }
 
-        [Required]
-        public DateTime PublishDate { get; set; }
     }
 }

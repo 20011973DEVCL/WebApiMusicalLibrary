@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiMusicalLibrary.Data;
 
@@ -11,9 +12,11 @@ using WebApiMusicalLibrary.Data;
 namespace WebApiMusicalLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240606162613_CambioDeTipoCampo")]
+    partial class CambioDeTipoCampo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,7 @@ namespace WebApiMusicalLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AlbunYear")
+                    b.Property<int?>("AlbunYear")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdMusicGenre")
@@ -44,6 +47,9 @@ namespace WebApiMusicalLibrary.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("PublishYear")
+                        .HasColumnType("int");
 
                     b.HasKey("IdAlbun");
 
