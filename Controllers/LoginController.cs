@@ -25,6 +25,10 @@ namespace WebApiMusicalLibrary.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Login(LoginUser userLogin)
         {
             var user = Autheticate(userLogin);
